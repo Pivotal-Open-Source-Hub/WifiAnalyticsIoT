@@ -9,7 +9,7 @@ import urllib
 import urllib2
 
 HOSTNAME = socket.gethostname()
-SERVER_ENDPOINT = 'http://127.0.0.1:8000/agent/report/'
+SERVER_ENDPOINT = 'http://192.168.1.2:9000'
 
 
 def main_loop():
@@ -22,8 +22,7 @@ def main_loop():
         pass
     # start the tshark process, outputting to file
     print("opening process")
-    # proc = subprocess.Popen("stdbuf -oL tshark -i wlan0 -I -f 'broadcast' -R 'wlan.fc.type == 0 && wlan.fc.subtype == 4' -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > tshark.log",
-    proc = subprocess.Popen("stdbuf -oL tshark -i en0 -I -f 'broadcast' -Y 'wlan.fc.type == 0 && wlan.fc.subtype == 4' -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > tshark.log",
+    proc = subprocess.Popen("sudo stdbuf -oL tshark -i wlan1mon -I -f 'broadcast' -R 'wlan.fc.type == 0 && wlan.fc.subtype == 4' -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > tshark.log",
         shell=True,
         bufsize=1,
         stdout=subprocess.PIPE,
