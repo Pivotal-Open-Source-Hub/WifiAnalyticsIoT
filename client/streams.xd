@@ -1,0 +1,2 @@
+admin config server http://localhost:9393
+stream create --name stream1 --definition "http --port=9000 | log" --deploy
