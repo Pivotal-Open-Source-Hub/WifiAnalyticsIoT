@@ -5,11 +5,11 @@ import time
 import re
 import hashlib
 import socket
-import urllib
-import urllib2
+import httplib
+import json
 
 HOSTNAME = socket.gethostname()
-SERVER_ENDPOINT = 'http://192.168.1.2:9000'
+SERVER_ENDPOINT = '192.168.1.2:9000'
 
 
 def main_loop():
@@ -76,8 +76,10 @@ def report(sightings):
         print(data)
         # don't crash if the request fails
         try:
-            req = urllib2.urlopen(SERVER_ENDPOINT, urllib.urlencode(data))
-            req.close()
+            connection = httplib.HTTPConnection(SERVER_ENDPOINT)
+            headers = {'Content-type': 'application/json'}
+            json_data=json.dumps(data)
+            connection.request('POST', '/', json_data, headers)
         except:
             pass
 
