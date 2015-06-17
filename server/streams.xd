@@ -1,0 +1,2 @@
+admin config server http://localhost:9393
+stream create --name stream1 --definition "http --port=9000 | gemfire-json-server --useLocator=true --host=localhost --port=10334 --regionName=Probe_requests --keyExpression=payload.getField('timestamp')+payload.getField('device_id')" --deploy
