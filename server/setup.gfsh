@@ -1,4 +1,4 @@
-# GemFire setup
+# Geode setup
 start locator --name=locator1 --J=-Dgemfire.http-service-port=7575
 
 start server --name=server1 --J=-Dgemfire.start-dev-rest-api=true --J=-Dgemfire.http-service-port=8080
