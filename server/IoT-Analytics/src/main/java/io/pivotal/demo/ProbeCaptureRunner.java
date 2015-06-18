@@ -7,13 +7,12 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 //@ComponentScan
-public class ProbeCaptureRunner{ //implements CommandLineRunner {
+public class ProbeCaptureRunner{ // implements CommandLineRunner {
 
 	private GeodeClient client = new GeodeClient();
 	
 	Logger logger = Logger.getLogger(ProbeCaptureRunner.class.getName());
 
-	//@Override
 	public void run(String... args) throws Exception {
 		
 				

@@ -1,6 +1,7 @@
 package io.pivotal.demo;
 
 
+
 //@SpringBootApplication
 public class IoTAnalyticsApplication {
 

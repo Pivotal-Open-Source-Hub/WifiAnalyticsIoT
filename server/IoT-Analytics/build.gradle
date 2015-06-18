@@ -1,20 +1,6 @@
-buildscript {
-    ext {
-        springBootVersion = '1.2.4.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        //classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
-    }
-}
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot' 
-//apply plugin: 'io.spring.dependency-management' 
 
 jar {
     baseName = 'IoT-Analytics'
@@ -31,13 +17,13 @@ repositories {
     maven { url "http://repo.spring.io/libs-snapshot" }
     maven { url "http://repo.spring.io/milestone" }
     maven { url "http://repo.spring.io/plugins-release" }    
+    
 }
 
 
 dependencies {
     compile("org.apache.geode:gemfire-core:1.0.0-incubating-SNAPSHOT")        
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.springframework.boot:spring-boot-starter"
+    
 }
 
 configurations {
