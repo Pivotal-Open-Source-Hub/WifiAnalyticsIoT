@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: org.apache.geode:gemfire-core:1.0.0-incubating-SNAPSHOT">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.geode/gemfire-core/1.0.0-incubating-SNAPSHOT/5a067e5e477008268bbc083d209e75a6434cf68d/gemfire-core-1.0.0-incubating-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
