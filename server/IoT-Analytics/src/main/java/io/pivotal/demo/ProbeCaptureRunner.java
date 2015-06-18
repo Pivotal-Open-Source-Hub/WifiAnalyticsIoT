@@ -6,18 +6,15 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
 public class ProbeCaptureRunner implements CommandLineRunner {
 
-	private GeodeClient client = new GeodeClient();
-	
-/*	
-	@Value("${delayInMs}") 
-	private long delay;
-*/
+	@Autowired
+	private GeodeClient client;
 	
 	Logger logger = Logger.getLogger(ProbeCaptureRunner.class.getName());
 
