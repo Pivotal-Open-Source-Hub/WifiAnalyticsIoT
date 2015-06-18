@@ -7,14 +7,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
+        //classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot' 
-apply plugin: 'io.spring.dependency-management' 
+//apply plugin: 'io.spring.dependency-management' 
 
 jar {
     baseName = 'IoT-Analytics'
@@ -38,12 +38,11 @@ dependencies {
     compile("org.apache.geode:gemfire-core:1.0.0-incubating-SNAPSHOT")        
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.springframework.boot:spring-boot-starter"
-    compile("org.springframework:spring-web")
-    
 }
 
 configurations {
     all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    
 }
 
 eclipse {

@@ -1,12 +1,10 @@
 package io.pivotal.demo;
 
-import org.springframework.context.annotation.ComponentScan;
-
 import com.gemstone.gemfire.cache.Region;
 import com.gemstone.gemfire.cache.client.ClientCache;
 import com.gemstone.gemfire.cache.client.ClientCacheFactory;
 
-@ComponentScan
+//@ComponentScan
 public class GeodeClient {
 
 	private static final String PROBE_REGION = "Probe_requests";

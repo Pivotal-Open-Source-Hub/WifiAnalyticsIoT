@@ -6,19 +6,14 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.ComponentScan;
+//@ComponentScan
+public class ProbeCaptureRunner{ //implements CommandLineRunner {
 
-@ComponentScan
-public class ProbeCaptureRunner implements CommandLineRunner {
-
-	@Autowired
-	private GeodeClient client;
+	private GeodeClient client = new GeodeClient();
 	
 	Logger logger = Logger.getLogger(ProbeCaptureRunner.class.getName());
 
-	@Override
+	//@Override
 	public void run(String... args) throws Exception {
 		
 				
