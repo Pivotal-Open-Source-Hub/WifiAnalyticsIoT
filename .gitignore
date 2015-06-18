@@ -29,6 +29,7 @@ var/
 
 **/server?/**/*.*
 **/locator?/**/*.*
+build
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
