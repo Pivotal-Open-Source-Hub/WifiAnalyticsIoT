@@ -1,6 +1,10 @@
 #!/bin/bash
 
-export GEODE_HOME=/Users/wmarkito/Pivotal/ASF/incubator-geode/gemfire-assembly/build/install/apache-geode/
+if [ -z "$GEODE_HOME" ]; then
+    echo "Please set GEODE_HOME"
+    exit 1
+fi
+
 export PATH=$GEODE_HOME/bin:$PATH
 
 echo "Geode version:" `gfsh version`
