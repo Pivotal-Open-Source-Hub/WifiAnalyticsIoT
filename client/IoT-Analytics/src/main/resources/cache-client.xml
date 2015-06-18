@@ -11,8 +11,7 @@
          -->
 <client-cache>
     <pool name="client" pr-single-hop-enabled="true">
-        <locator host="localhost" port="10334" />
-        <!--<server host="192.168.1.85" port="40404" />-->
+        <locator host="192.168.1.2" port="10334" />
     </pool>
 
     <region name="Probe_requests">
