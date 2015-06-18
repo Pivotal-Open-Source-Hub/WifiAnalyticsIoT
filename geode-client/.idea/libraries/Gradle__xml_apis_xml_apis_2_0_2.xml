@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: xml-apis:xml-apis:2.0.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/2.0.2/3136ca936f64c9d68529f048c2618bd356bf85c9/xml-apis-2.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/2.0.2/281e2df846eaa47a60cd74e0513195b1d140bf1c/xml-apis-2.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

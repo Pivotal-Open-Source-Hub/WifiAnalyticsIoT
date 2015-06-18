@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: javax.resource:javax.resource-api:1.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.resource/javax.resource-api/1.7/ae40e0864eb1e92c48bf82a2a3399cbbf523fb79/javax.resource-api-1.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.resource/javax.resource-api/1.7/8404dc3da719ee0a9cebff2a183a2da4a4eb2719/javax.resource-api-1.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
