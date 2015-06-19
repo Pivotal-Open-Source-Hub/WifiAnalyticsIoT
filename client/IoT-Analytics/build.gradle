@@ -31,6 +31,15 @@ configurations {
     
 }
 
+task run(type:JavaExec) {
+	main = 'io.pivotal.demo.IoTAnalyticsApplication'
+	systemProperties System.getProperties()
+	classpath = sourceSets.main.runtimeClasspath
+	minHeapSize = "200M"
+	maxHeapSize = "200M"
+	jvmArgs = ["-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC", "-XX:PermSize=512m", "-XX:MaxPermSize=512m"]
+}
+
 eclipse {
     classpath {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
