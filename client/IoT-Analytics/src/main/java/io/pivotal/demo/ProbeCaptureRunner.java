@@ -17,13 +17,19 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		
 				
 		logger.info("--------------------------------------");
-		Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1 -I -f 'broadcast' -R 'wlan.fc.type == 0 && wlan.fc.subtype == 4' -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal");
+		Process tshark = Runtime.getRuntime().exec("sudo /usr/local/bin/tshark -i en0 -I -f 'broadcast' -Y 'wlan.fc.type == 0 && wlan.fc.subtype == 4' -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal  ");
+
 		if (!tshark.isAlive()){
+			
+			logger.severe("Process exited with code "+tshark.exitValue());	
+			logger.severe(new BufferedReader(new InputStreamReader(tshark.getInputStream())).readLine());
+			
 			BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
 			String errorLine = null;
 			while ((errorLine = errorStream.readLine())!=null){
 				logger.severe(errorLine);
 			}
+			
 		}
 		InputStream in = tshark.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
