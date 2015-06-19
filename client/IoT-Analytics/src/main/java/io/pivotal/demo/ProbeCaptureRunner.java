@@ -35,11 +35,10 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		logger.info("Capturing tshark process output...");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line = null;
-		logger.info(": \n");
 		while (tshark.isAlive()){
 			line = br.readLine();
 			if (line==null || line.isEmpty()) continue;
-			logger.info(line);
+			logger.fine(line);
 			StringTokenizer st = new StringTokenizer(line);
 			String timeepoch = st.nextToken();
 			String deviceId = st.nextToken();
@@ -48,15 +47,14 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
 			client.putProbeReq(req);
 		}
-		logger.severe("Process exited with code "+tshark.exitValue());	
-		logger.severe(new BufferedReader(new InputStreamReader(tshark.getInputStream())).readLine());
-			
-		BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
-		String errorLine = null;
-		while ((errorLine = errorStream.readLine())!=null){
-			logger.severe(errorLine);
+		logger.info("Process exited with code "+tshark.exitValue());	
+		if (tshark.exitValue()!=0){
+			BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
+			String errorLine = null;
+			while ((errorLine = errorStream.readLine())!=null){
+				logger.severe(errorLine);
+			}
 		}
-			
 		
 		logger.info("done");
 		
