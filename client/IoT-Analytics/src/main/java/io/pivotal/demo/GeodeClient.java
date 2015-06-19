@@ -28,7 +28,7 @@ public class GeodeClient {
 	}
 	
 	public void putProbeReq(ProbeRequest req){
-		probesRegion.put(req.getProbe_timestamp()+req.getDevice_id(), req);
+		probesRegion.put(req.getProbe_timeepoch()+req.getDevice_id(), req);
 	}
 	
 	

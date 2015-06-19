@@ -41,11 +41,11 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 			if (line==null || line.isEmpty()) continue;
 			logger.info(line);
 			StringTokenizer st = new StringTokenizer(line);
-			long timestamp = Long.parseLong(st.nextToken());
+			String timeepoch = st.nextToken();
 			String deviceId = st.nextToken();
 			int signal_dbm = Integer.parseInt(st.nextToken());
 			
-			ProbeRequest req = new ProbeRequest(timestamp,deviceId,signal_dbm);
+			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
 			client.putProbeReq(req);
 		}
 		logger.severe("Process exited with code "+tshark.exitValue());	

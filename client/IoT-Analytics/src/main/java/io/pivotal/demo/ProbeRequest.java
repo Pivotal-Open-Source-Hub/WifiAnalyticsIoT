@@ -5,24 +5,24 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class ProbeRequest implements Serializable {
 
-	private long probe_timestamp;
+	private String probe_timeepoch;
 	private String device_id;
 	private int signal_dbm;
 	
 
 	
-	public ProbeRequest(long probe_timestamp, String device_id, int signal_dbm) {
+	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm) {
 		super();
-		this.probe_timestamp = probe_timestamp;
+		this.probe_timeepoch = probe_timeepoch;
 		this.device_id = device_id;
 		this.signal_dbm = signal_dbm;
 	}
 	
-	public long getProbe_timestamp() {
-		return probe_timestamp;
+	public String getProbe_timeepoch() {
+		return probe_timeepoch;
 	}
-	public void setProbe_timestamp(long probe_timestamp) {
-		this.probe_timestamp = probe_timestamp;
+	public void setProbe_timeepoch(String probe_timeepoch) {
+		this.probe_timeepoch = probe_timeepoch;
 	}
 	public String getDevice_id() {
 		return device_id;
