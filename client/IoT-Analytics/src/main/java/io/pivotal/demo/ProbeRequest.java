@@ -1,9 +1,8 @@
 package io.pivotal.demo;
 
-import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class ProbeRequest implements Serializable {
+public class ProbeRequest {
 
 	private String probe_timeepoch;
 	private String device_id;
