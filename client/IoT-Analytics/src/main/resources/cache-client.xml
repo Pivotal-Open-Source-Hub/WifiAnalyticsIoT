@@ -13,7 +13,16 @@
     <pool name="client" pr-single-hop-enabled="true" >
         <locator host="192.168.1.2" port="10334" />
     </pool>
-    <pdx read-serialized="true"/>
+    <pdx read-serialized="false">
+		<pdx-serializer>
+			<class-name>
+       			com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer
+      		</class-name>
+      		<parameter name="classes">
+      			<string>io.pivotal.demo.ProbeRequest</string>
+     		</parameter>    		
+		</pdx-serializer>
+    </pdx>
 
     <region name="Probe_requests" >
         <region-attributes refid="CACHING_PROXY">
