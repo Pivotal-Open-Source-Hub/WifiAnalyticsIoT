@@ -39,6 +39,17 @@ task run(type:JavaExec) {
 	maxHeapSize = "200M"
 }
 
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'IoT Analytics',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'io.pivotal.demo.IoTAnalyticsApplication'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 eclipse {
     classpath {
          containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
