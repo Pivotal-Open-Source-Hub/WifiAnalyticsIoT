@@ -1,14 +1,13 @@
 package io.pivotal.demo;
 
 
-@SuppressWarnings("serial")
 public class ProbeRequest {
 
 	private String probe_timeepoch;
 	private String device_id;
 	private int signal_dbm;
 	
-
+	public ProbeRequest() {}
 	
 	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm) {
 		super();
