@@ -10,11 +10,12 @@
           | region's pool connects to a cacheserver listening on port 40404.
          -->
 <client-cache>
-    <pool name="client" pr-single-hop-enabled="true">
+    <pool name="client" pr-single-hop-enabled="true" >
         <locator host="192.168.1.2" port="10334" />
     </pool>
+    <pdx read-serialized="true"/>
 
-    <region name="Probe_requests">
+    <region name="Probe_requests" >
         <region-attributes refid="CACHING_PROXY">
         </region-attributes>
     </region>
