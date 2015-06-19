@@ -42,10 +42,10 @@ task run(type:JavaExec) {
 task fatJar(type: Jar) {
 	manifest {
         attributes 'Implementation-Title': 'IoT Analytics',  
-        	'Implementation-Version': version,
+        	'Implementation-Version': '0.1',
         	'Main-Class': 'io.pivotal.demo.IoTAnalyticsApplication'
     }
-    baseName = project.name + '-all'
+    baseName = 'IotAnalytics-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
