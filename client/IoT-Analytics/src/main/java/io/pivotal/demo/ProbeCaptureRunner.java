@@ -37,8 +37,8 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		String line = null;
 		while (tshark.isAlive()){
 			line = br.readLine();
+			logger.info(line);
 			if (line==null || line.isEmpty()) continue;
-			logger.fine(line);
 			StringTokenizer st = new StringTokenizer(line);
 			String timeepoch = st.nextToken();
 			String deviceId = st.nextToken();
