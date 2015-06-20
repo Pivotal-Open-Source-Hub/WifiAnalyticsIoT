@@ -1,6 +1,8 @@
 package io.pivotal.demo;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -17,8 +19,8 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		
 				
 		logger.info("--------------------------------------");
-		Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal  ");
-
+		Process tshark = Runtime.getRuntime().exec("sudo nohup tshark -i wlan1mon -I -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > probe_pipe &");
+		
 		if (!tshark.isAlive()){
 			
 			logger.severe("Process exited with code "+tshark.exitValue());	
@@ -31,14 +33,16 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 			}
 			
 		}
-		InputStream in = tshark.getInputStream();
+		
+		tshark.waitFor();
+		
+		
+		InputStream in = new FileInputStream("probe_pipe");
 		logger.info("Capturing tshark process output...");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line = null;
-		while (tshark.isAlive()){
-			line = br.readLine();
-			logger.info(line);
-			if (line==null || line.isEmpty()) continue;
+		while ( (line=br.readLine())!=null){
+			logger.fine(line);
 			StringTokenizer st = new StringTokenizer(line);
 			String timeepoch = st.nextToken();
 			String deviceId = st.nextToken();
@@ -46,14 +50,6 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 			
 			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
 			client.putProbeReq(req);
-		}
-		logger.info("Process exited with code "+tshark.exitValue());	
-		if (tshark.exitValue()!=0){
-			BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
-			String errorLine = null;
-			while ((errorLine = errorStream.readLine())!=null){
-				logger.severe(errorLine);
-			}
 		}
 		
 		logger.info("done");
