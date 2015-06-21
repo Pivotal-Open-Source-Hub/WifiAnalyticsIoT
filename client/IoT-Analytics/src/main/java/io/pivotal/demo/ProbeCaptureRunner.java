@@ -22,38 +22,8 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 				
 		logger.info("Capturing tshark process output...");
 		
-		/*
-		InputStream in = new FileInputStream("probe_pipe");
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		
-		Thread t = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try{
-									
-					String line = null;
-					while ( (line=br.readLine())!=null){
-						logger.fine(line);
-						StringTokenizer st = new StringTokenizer(line);
-						String timeepoch = st.nextToken();
-						String deviceId = st.nextToken();
-						int signal_dbm = Integer.parseInt(st.nextToken());
-						
-						ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
-						client.putProbeReq(req);
-					}
-					
-				}
-				catch(Exception e){
-					throw new RuntimeException(e);
-				}
-			}
-		});
-		t.start();*/
-		
-		//while (true){
-			Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > probe_pipe ");				
+	 	Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal");				
+		try{
 			if (!tshark.isAlive()){
 				
 				logger.severe("Process exited with code "+tshark.exitValue());	
@@ -66,22 +36,27 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 				}						
 			}
 			
+			BufferedReader br = new BufferedReader(new InputStreamReader(tshark.getInputStream()));
 			while (tshark.isAlive()){
-				try{
-					Thread.sleep(2000);
-				}catch(Exception e){}
-				InputStream in = tshark.getInputStream();
-				int numberOfBytes = in.available();
-				byte[] bytes = new byte[numberOfBytes];
-				int bytesRead = in.read(bytes);
-				logger.info("Read: "+bytes.toString());
-			
+				String line = br.readLine();
+				processLine(line);			
 			}
-			tshark.waitFor(30, TimeUnit.SECONDS);
-			
-		//}
+			br.close();
+			tshark.waitFor();
+		}
+		finally{
+			if (tshark.isAlive()) tshark.destroyForcibly();
+		}	
 		
+	}
+	protected void processLine(String line){
+		StringTokenizer st = new StringTokenizer(line);
+		String timeepoch = st.nextToken();
+		String deviceId = st.nextToken();
+		int signal_dbm = Integer.parseInt(st.nextToken());
 		
+		ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
+		client.putProbeReq(req);
 	}
 
 }
