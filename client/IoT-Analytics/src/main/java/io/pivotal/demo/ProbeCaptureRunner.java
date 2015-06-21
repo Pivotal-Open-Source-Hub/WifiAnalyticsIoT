@@ -21,6 +21,8 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		logger.info("--------------------------------------");
 				
 		logger.info("Capturing tshark process output...");
+		
+		/*
 		InputStream in = new FileInputStream("probe_pipe");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		
@@ -48,9 +50,9 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 				}
 			}
 		});
-		t.start();
+		t.start();*/
 		
-		while (true){
+		//while (true){
 			Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal > probe_pipe ");				
 			if (!tshark.isAlive()){
 				
@@ -62,9 +64,22 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 				while ((errorLine = errorStream.readLine())!=null){
 					logger.severe(errorLine);
 				}						
-			}							
+			}
+			
+			while (tshark.isAlive()){
+				try{
+					Thread.sleep(2000);
+				}catch(Exception e){}
+				InputStream in = tshark.getInputStream();
+				int numberOfBytes = in.available();
+				byte[] bytes = new byte[numberOfBytes];
+				int bytesRead = in.read(bytes);
+				logger.info("Read: "+bytes.toString());
+			
+			}
 			tshark.waitFor(30, TimeUnit.SECONDS);
-		}
+			
+		//}
 		
 		
 	}
