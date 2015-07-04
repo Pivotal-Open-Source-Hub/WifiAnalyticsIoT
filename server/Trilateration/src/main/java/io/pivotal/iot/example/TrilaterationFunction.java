@@ -109,19 +109,7 @@ public class TrilaterationFunction implements MultivariateJacobianFunction {
 	}
 
 	
-	/*
-	 * Calculate the Trilateration using NonLinearLeastSquareSolver
-	 */
-	
-	public double[] calculate(){
-		
-		TrilaterationFunction trilaterationFunction = new TrilaterationFunction(positions, distances);
-		NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(trilaterationFunction, new LevenbergMarquardtOptimizer());
 
-		Optimum optimum = solver.solve();
-		return optimum.getPoint().toArray();
-		
-	}
 	
 	
 	

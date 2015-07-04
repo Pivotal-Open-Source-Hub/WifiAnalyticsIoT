@@ -16,8 +16,8 @@ public class TriangulationTest {
 		double[][] positions = new double[][] { { 25.0, 50.0 }, { 0.0, 0.0 }, {50.0, 0.0} };
 		double[] distances = new double[] { 35.0, 14.0, 12.0 };
 
-		TrilaterationFunction trilaterationFunction = new TrilaterationFunction(positions, distances);
-		double[] results = trilaterationFunction.calculate();
+		
+		double[] results = Trilateration.calculate(positions, distances);
 		double[] expectedPosition = new double[] { 25.0, 10.0 };
 		testResultsSimple(expectedPosition, 0.0001, results);		
 
