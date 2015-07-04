@@ -8,7 +8,7 @@ import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.linear.SingularMatrixException;
 import org.junit.Test;
 
-public class TriangulationTest {
+public class TrilaterationTest {
     
 	
 	@Test public void testTrilateration() {
