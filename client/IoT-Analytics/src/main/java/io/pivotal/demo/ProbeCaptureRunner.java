@@ -21,7 +21,7 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 				
 		logger.info("Capturing tshark process output...");
 		
-	 	Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal");				
+	 	Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal -e radiotap.channel.freq");				
 		try{
 			if (!tshark.isAlive()){
 				
@@ -53,23 +53,27 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		String timeepoch = st.nextToken();
 		String deviceId = st.nextToken();
 		int signal_dbm = Integer.parseInt(st.nextToken());
+		int frequency = Integer.parseInt(st.nextToken());
 		
 		try{
-			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
+			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm, frequency);
 			client.putProbeReq(req);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
 	/*
+	
 	public static void main(String args[]) throws Exception{
 		ProbeCaptureRunner runner = new ProbeCaptureRunner();
 		Iterator<Object> probes = runner.client.getAll().iterator();
 		while (probes.hasNext()){
 			ProbeRequest req = (ProbeRequest)probes.next();
-			req.setHostname(InetAddress.getLocalHost().getHostAddress());
+			if (req.getHostname()==null || req.getHostname().isEmpty())
+				req.setHostname(InetAddress.getLocalHost().getHostAddress());
+			if (req.getFrequencyMhz()==0)
+				req.setFrequencyMhz(2412);
 			runner.client.putProbeReq(req);
 		}
 	}*/

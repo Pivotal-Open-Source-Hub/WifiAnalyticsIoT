@@ -10,16 +10,28 @@ public class ProbeRequest {
 	private String device_id;
 	private int signal_dbm;
 	private String hostname;
+	private int frequencyMhz;
 	
 	public ProbeRequest() {}
 	
-	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm) throws UnknownHostException {
+	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm, int frequencyMhz) throws UnknownHostException {
 		super();
 		this.probe_timeepoch = probe_timeepoch;
 		this.device_id = device_id;
 		this.signal_dbm = signal_dbm;
 		this.hostname = InetAddress.getLocalHost().getHostName();
+		this.frequencyMhz = frequencyMhz;
 	}
+	
+	public int getFrequencyMhz() {
+		return frequencyMhz;
+	}
+
+	public void setFrequencyMhz(int frequencyMhz) {
+		this.frequencyMhz = frequencyMhz;
+	}
+
+	
 	
 	public String getProbe_timeepoch() {
 		return probe_timeepoch;
