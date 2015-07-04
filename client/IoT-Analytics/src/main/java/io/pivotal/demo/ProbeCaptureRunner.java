@@ -1,11 +1,10 @@
 package io.pivotal.demo;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 //@ComponentScan
@@ -55,8 +54,24 @@ public class ProbeCaptureRunner{ // implements CommandLineRunner {
 		String deviceId = st.nextToken();
 		int signal_dbm = Integer.parseInt(st.nextToken());
 		
-		ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
-		client.putProbeReq(req);
+		try{
+			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm);
+			client.putProbeReq(req);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
+	
+	/*
+	public static void main(String args[]) throws Exception{
+		ProbeCaptureRunner runner = new ProbeCaptureRunner();
+		Iterator<Object> probes = runner.client.getAll().iterator();
+		while (probes.hasNext()){
+			ProbeRequest req = (ProbeRequest)probes.next();
+			req.setHostname(InetAddress.getLocalHost().getHostAddress());
+			runner.client.putProbeReq(req);
+		}
+	}*/
 
 }
