@@ -2,4 +2,4 @@ admin config server http://192.168.2.1:9393
 
 stream create --name input --definition "http --port=9000 | gemfire-json-server --host=192.168.2.1 --port=10334 --useLocator=true --regionName=Probe_requests --keyExpression=payload.getField('nanoTimestamp')" --deploy
 
-stream create --name trilateration --definition "tap:stream:input.http > transform --script='file:trilateration.groovy' | gemfire-json-server --useLocator=true --host=192.168.2.1 --port=10334 --regionName=Trilateration --keyExpression=payload.getField('hostname')+payload.getField('device_id') " --deploy
+stream create --name trilateration --definition "tap:stream:input.http > splitter --expression=#jsonPath(payload,'$') | transform --script='file:trilateration.groovy' |object-to-json |  gemfire-json-server --useLocator=true --host=192.168.2.1 --port=10334 --regionName=Trilateration --keyExpression=payload.getField('hostname')+payload.getField('device_id') " --deploy
