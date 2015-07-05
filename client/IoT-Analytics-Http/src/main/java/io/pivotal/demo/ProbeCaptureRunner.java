@@ -22,6 +22,8 @@ public class ProbeCaptureRunner implements CommandLineRunner {
     @Value("${serverUrl}")
     private String URL;
 	
+    @Value("${tshark_process}")
+    private String tshark_command;
 	
 	public void run(String... args) throws Exception {
 		
@@ -30,8 +32,7 @@ public class ProbeCaptureRunner implements CommandLineRunner {
 				
 		logger.info("Capturing tshark process output...");
 		
-	 	//Process tshark = Runtime.getRuntime().exec("sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal -e radiotap.channel.freq");
-		Process tshark = Runtime.getRuntime().exec("/usr/local/bin/tshark -i en0 -I -l -f broadcast -Y wlan.fc.subtype==4 -T fields -e frame.time_epoch -e wlan.sa -e radiotap.dbm_antsignal -e radiotap.channel.freq");
+		Process tshark = Runtime.getRuntime().exec(tshark_command);
 		try{
 			if (!tshark.isAlive()){
 				
