@@ -9,7 +9,7 @@ import org.apache.commons.math3.linear.DiagonalMatrix;
 
 
 /**
- * Solves a Trilateration problem with an instance of a
+ * Solves a TrilaterationG problem with an instance of a
  * {@link LeastSquaresOptimizer}
  * 
  * @author scott

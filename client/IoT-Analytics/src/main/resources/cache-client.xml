@@ -11,7 +11,7 @@
          -->
 <client-cache>
     <pool name="client" pr-single-hop-enabled="true" >
-        <locator host="127.0.0.1" port="10334" />
+        <locator host="192.168.2.1" port="10334" />
     </pool>
     <pdx read-serialized="false">
 		<pdx-serializer>

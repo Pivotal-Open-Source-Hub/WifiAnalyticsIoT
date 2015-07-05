@@ -1,6 +1,9 @@
 package io.pivotal.demo;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.gemstone.gemfire.cache.Region;
 import com.gemstone.gemfire.cache.client.ClientCache;
@@ -12,8 +15,8 @@ public class GeodeClient {
 	private static final String PROBE_REGION = "Probe_requests";
 	
 	private ClientCacheFactory clientCacheFactory;
-	private ClientCache cache;
-	private Region<String, ProbeRequest> probesRegion;
+	ClientCache cache;
+	private Region<Long, ProbeRequest> probesRegion;
 	
 	
 	public GeodeClient(){
@@ -30,8 +33,13 @@ public class GeodeClient {
 	}
 	
 	public void putProbeReq(ProbeRequest req){
-		probesRegion.put(req.getProbe_timeepoch()+req.getDevice_id(), req);
+		probesRegion.put(req.getNanoTimestamp(), req);
 	}
+	
+	public void removeProbeReq(Object key){
+		probesRegion.destroy(key);
+	}
+	
 	
 	public List<Object> getAll() throws Exception{
 		return probesRegion.query("Select * from /Probe_requests").asList();

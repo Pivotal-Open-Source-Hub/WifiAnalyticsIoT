@@ -10,7 +10,7 @@ import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.Pair;
 
 /**
- * Models the Trilateration problem. This is a formulation for a nonlinear least
+ * Models the TrilaterationG problem. This is a formulation for a nonlinear least
  * squares optimizer.
  * 
  * @author scott

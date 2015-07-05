@@ -75,6 +75,7 @@ public class TrilaterationTest {
 		for (int i = 0; i < calculatedPosition.length; i++) {
 			assertEquals(expectedPosition[i], calculatedPosition[i], delta);
 		}
+		
 	}	
 	
 }

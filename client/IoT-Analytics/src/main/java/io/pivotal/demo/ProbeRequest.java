@@ -11,18 +11,29 @@ public class ProbeRequest {
 	private int signal_dbm;
 	private String hostname;
 	private int frequencyMhz;
+	private long nanoTimestamp;
 	
 	public ProbeRequest() {}
 	
-	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm, int frequencyMhz) throws UnknownHostException {
+	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm, int frequencyMhz, long timestamp) throws UnknownHostException {
 		super();
 		this.probe_timeepoch = probe_timeepoch;
 		this.device_id = device_id;
 		this.signal_dbm = signal_dbm;
 		this.hostname = InetAddress.getLocalHost().getHostName();
 		this.frequencyMhz = frequencyMhz;
+		this.nanoTimestamp = timestamp;
 	}
 	
+	
+	public long getNanoTimestamp() {
+		return nanoTimestamp;
+	}
+
+	public void setNanoTimestamp(long nanoTimestamp) {
+		this.nanoTimestamp = nanoTimestamp;
+	}
+
 	public int getFrequencyMhz() {
 		return frequencyMhz;
 	}
