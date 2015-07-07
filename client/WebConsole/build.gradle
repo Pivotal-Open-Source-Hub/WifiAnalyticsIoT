@@ -1,0 +1,41 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
+	}
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+jar {
+    baseName = 'WebConsole'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+repositories {
+    mavenCentral()    
+}
+
+
+dependencies {
+
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "org.springframework.boot:spring-boot-autoconfigure"
+    compile "org.springframework.boot:spring-boot-starter"
+	compile "org.springframework.boot:spring-boot-starter-web"
+    compile("org.springframework:spring-web")
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}

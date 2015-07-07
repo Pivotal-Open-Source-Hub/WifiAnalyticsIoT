@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Venn Diagrams with D3.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="Ben Frederickson">
+    
+    <meta property="og:image" content="/images/venn.png">
+    
+    <link rel="canonical" href="http://www.benfrederickson.com/venn-diagrams-with-d3.js/" />
+    <link href="http://static.benfrederickson.com.s3-website-us-east-1.amazonaws.com/bootstrap-3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--prettify.css -->
+    <style>
+        .pln { color: #4d4d4c; }
+        .str { color: #718c00; }
+        .kwd { color: #8959a8; }
+        .com { color: #8e908c; }
+        .typ { color: #4271ae; }
+        .lit { color: #f5871f; }
+        .pun { color: #4d4d4c; }
+        .opn { color: #4d4d4c; }
+        .clo { color: #4d4d4c; }
+        .tag { color: #c82829; }
+        .atn { color: #f5871f; }
+        .atv { color: #3e999f; }
+        .dec { color: #f5871f; }
+        .var { color: #c82829; }
+        .fun { color: #4271ae; }
+
+        .prettyprint {
+          padding: 8px;
+          background-color: #fcfcfe;
+          border: 1px solid #e1e1e8;
+        }
+
+        .prettyprint.linenums {
+          -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+             -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+                  box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+        }
+
+        /* Specify class=linenums on a pre to get line numbering */
+        ol.linenums {
+          margin: 0 0 0 33px; /* IE indents via margin-left */
+        }
+        ol.linenums li {
+          padding-left: 12px;
+          color: #bebec5;
+          line-height: 18px;
+        }
+
+        pre {
+          overflow: auto;
+          word-wrap: normal;
+          white-space: pre;
+        }
+    </style>
+
+    <link rel="alternate" type="application/rss+xml" href="/atom.xml" title="RSS feed">
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29851970-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </head>
+  <body onload="prettyPrint()">
+
+    <div class="navbar navbar-static-top navbar-default">
+      <div class="container">
+      <div class = "row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Ben Frederickson</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="/about.html">About</a></li>
+            <li><a href="/atom.xml">RSS</a></li>
+            <li><a href="http://github.com/benfred">GitHub</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+      </div></div>
+    </div>
+
+    <div class="container">
+    <div class = "row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="page-header" style="margin-top:0px">
+    <h1 style="margin-top:0px">
+    
+        <a href="/venn-diagrams-with-d3.js/">Venn Diagrams with D3.js</a>
+        
+    </h1>
+</div>
+
+<p>A couple of my goals for this year are to learn both Javascript and D3.js. Its
+gotten to the point where its embarrassing that I don't know Javascript, and
+I want to learn D3 since I keep on seeing so many beautiful looking
+visualizations being made with it. To get started with this, I thought I'd try use D3 to create the simplest possible visualization I could think of - the Venn diagram.</p>
+
+<p>An example of this code in action is below. You can set the sizes of each set, and the
+sizes of the set intersections - and the code will dynamically compute the best position
+for each set, and display it with D3:</p>
+
+<!--more-->
+
+
+<script src="/images/d3.v3.min.js" charset="utf-8"></script>
+
+
+<script src="/images/venn.js"></script>
+
+
+
+
+<div class="svgcheck well"><h5>Note: you need Javascript enabled and a SVG compatible browser to
+view the diagrams here!</h5><p>Its looking like you're missing javascript, or
+are running an old web browser that doesn't support SVG. If no diagrams show
+up then you might want to consider loading this up in a different browser.
+I've tested this with Chrome, Safari and Firefox only.</div>
+
+
+<script>
+function hasSVG() {
+    return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure",
+    "1.1");
+}
+if (hasSVG()) {
+    d3.select(".svgcheck").attr("style", "display:none");
+}
+</script>
+
+
+
+
+<div style="float:left;padding:20px">
+    <table>
+    <tr>
+      <td>|A|</td>
+      <td>
+        <input class="input-mini venn_area" id="A" type="number" value="16">
+      </td>
+    </tr>
+    <tr>
+      <td>|B|</td>
+      <td>
+        <input class="input-mini venn_area" id="B" type="number" value="16">
+      </td>
+    </tr>
+    <tr>
+      <td>|C|</td>
+      <td>
+        <input class="input-mini venn_area" id="C" type="number" value="12">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745B|</td>
+      <td>
+        <input class="input-mini venn_area" id="A,B" type="number" value="4">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745C|</td>
+      <td>
+        <input class="input-mini venn_area" id="A,C" type="number" value="4">
+      </td>
+    </tr>
+    <tr>
+      <td>|B&#8745C|</td>
+      <td>
+        <input class="input-mini venn_area" id="B,C" type="number" value="3">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745B&#8745C|&nbsp</td>
+      <td>
+        <input class="input-mini venn_area" id="A,B,C" type="number" value="2">
+      </td>
+    </tr>
+    </table>
+</div>
+
+
+<div id="dynamic"></div>
+
+
+<div style="clear: both;"></div>
+
+
+<script>
+
+function getSetIntersections() {
+    areas = d3.selectAll(".venn_area")[0].map(
+        function (element) { 
+            return { sets: element.id.split(","), 
+                     size: parseFloat(element.value)};} );
+    return areas;
+}
+
+
+// draw the initial set
+var w = Math.min(480, document.documentElement.clientWidth-30);
+var chart = venn.VennDiagram()
+                 .width(w)
+                 .height(w * .8);
+
+d3.select("#dynamic").datum(getSetIntersections()).call(chart);
+
+// redraw the sets on any change in input
+d3.selectAll("input").on("change", function() {
+    d3.select("#dynamic").datum(getSetIntersections()).call(chart);
+});
+
+</script>
+
+
+<p>The hard part here isn't actually displaying the diagram with D3  -
+its calculating the positions of each set such that the areas of each region are
+proportional to the size of the set intersections.</p>
+
+<p>The problem is that even for only 3 sets, its not always possible to position
+everything so that everything is area proportional to the set sizes. Try
+changing A=B=C=8 , AB=AC=4 and BC=0 in the above
+example to see what I mean about impossible layouts. There is no way to
+exactly satisfy all those constraints. Even worse is trying to layout Euler
+diagrams with 4+ sets: if there are no disjoint sets, its actually impossible to use
+circles to represent these set relations exactly.</p>
+
+<p>I still want the best possible approximation even if its not possible to be
+perfect all the time.  So I did the
+sensible thing here: define a function that measures how well a layout
+matches the desired overlaps - and then minimize that function numerically.</p>
+
+<h3>Searching for a solution</h3>
+
+<p>The loss function I'm using is just an sum of squared errors,
+comparing the actual size of each overlapping set to the desired size.</p>
+
+<blockquote><p>lossFunction = ∑ (actualOverlap<sub>i</sub> - desiredOverlap<sub>i</sub> )<sup>2</sup>
+)</p></blockquote>
+
+<p>To minimize this function, I started out using the <a href="http://www.numericjs.com/">unconstrained minimization
+function from numeric.js</a> - but ran into
+some issues with it. This was probably aggravated by occasionally using a discrete
+approximation to the loss function (more on that in a bit), and by numeric.js attempting to approximate the
+gradient using a really small step size. So I switched to the <a href="https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method">downhill
+simplex method</a>,
+writing it out myself since I didn't see a Javascript version available.</p>
+
+<h4>Finding Initial Positions</h4>
+
+<div class="well">
+<b> Update Jun. 2015</b>: This has been updated with a different algorithm for computing initial positions. While the greedy layout is still used, this new algorithm fixes some issues that it occasionally encountered. <a href="/better-venn-diagrams/">More details here</a>
+</div>
+
+
+<p>Using a local optimization technique requires a good initial layout to
+optimize. Positioning the sets randomly works kind of poorly
+for large numbers of sets, and I prefer a deterministic solution anyways.</p>
+
+<p>My solution was to use a simple greedy approach. Each set is laid out one at a time,
+from sets with the biggest intersections to sets with the smallest. For each
+set that is being added, the distance to each laid out set is computed such
+that the overlap area is proportional to the size of the set intersection. The distances are used to generate a list of
+points to evaluate, and the set is added at the point where the loss function
+is lowest. The points to evaluate are just 90 degrees to each single set, and
+the two points where the distances are exactly correct relative to each pair of sets (if possible).</p>
+
+<h4>Calculating overlap area for 3+ circles</h4>
+
+<div class="well">
+<b> Update Nov. 2013 </b>: This library now has a fast exact method of
+calculating 3+ circle overlaps - making this section somewhat obsolete.
+<a href="/calculating-the-intersection-of-3-or-more-circles/">More details here</a>
+</div>
+
+
+<p>This only really leaves calculating the loss function.</p>
+
+<p>Coming up with the formula for the overlap area of two circles was relatively
+easy - it just required remembering enough calculus to set up the equation,
+and then getting Wolfram Alpha to do the actual integration for me.</p>
+
+<p>However, I couldn't find a way to scale this up to handle 3+ circles. Quite
+honestly my rusting calculus skills are just not up to the job here.  So I did the logical thing and googled for research on how to compute this.</p>
+
+<div style="float:right;text-align:center;">
+<small>These seem to be my choices here:</small>
+<div class="notfunny"></div>
+</div>
+
+
+<script>
+var w2 = Math.min(350, document.documentElement.clientWidth-35), h2 = w2/ 2.;
+var notfunny = [{sets: ["fast"], size: 30}, 
+                 {sets: ["exact"], size: 30},
+                 {sets: ["uses 3+ overlaps"], size: 30},
+                 {size : 7, sets : ['fast','exact']},
+                 {size : 0, sets : ['fast','uses 3+ overlaps']},
+                 {size : 0, sets : ['exact','uses 3+ overlaps']}];
+
+var vd = venn.VennDiagram().width(w2).height(h2);
+d3.select(".notfunny").datum(notfunny).call(vd);;
+</script>
+
+
+<p>I found an <a href="http://www.cs.uic.edu/~wilkinson/Publications/venneuler.pdf">interesting paper on laying out area proportional venn and euler
+diagrams</a> by
+Leland Wilkinson.  Since computing circle overlaps is apparently uber
+difficult, he talks about how to approximate this. His approach is to actually
+plot each set and use binary indexing to figure out the overlap areas.</p>
+
+<p>The idea here is to actually draw each set out, and set the colour for the set
+such that only one unique bit is set. For example in the 3
+set case the colours for each set would
+be (001, 010, 100) in binary. By drawing out each circle with that colour, and summing
+the colours in case of overlaps - you can get a diagram where each possible
+region is represented by a unique colour. Getting the size of all the regions
+is as simple as calculating a colour histogram on the drawn out image.</p>
+
+<p>Implementing this in Javascript means using Canvas operations, since
+that seems to be the only way to directly manipulate images and get the pixel
+values. On a 200x200 canvas, calculating the loss like this
+takes about 6ms on my laptop. Which sounds good, until you realize that we
+need to calculate the loss hundreds of times during the optimization step.</p>
+
+<p>For offline processing, this wouldn't be a huge deal - but a second
+processing delay is way too slow for interactive use. Even worse, is that my
+browser seems to totally lock up while this is going on.</p>
+
+<p>Also the output between using 3+ overlaps and not usually isn't all that
+different. Getting the overlaps of 2 sets right, usually means that the
+overlaps of 3 or more sets are basically right - or the problem is so over-constrained
+that its impossible to get right. I ripped off an example of this from the
+Wilkinson paper to demonstrate what I mean here:</p>
+
+<div style="clear: both;"></div>
+
+
+<div style="float:left;text-align:center;">
+<small>Output considering only 2 overlaps</small>
+<div class="medical"></div>
+</div>
+
+
+
+
+<div style="text-align:center;">
+<small>Diagram from Wilkinson paper</small><br>
+<img src="/images/venneuler_fig8.png" width="300">
+<br>
+</div>
+
+
+<div style="clear: both;"></div>
+
+
+
+
+<script>
+var medicalSets = [{label : 'SE', size : 28, sets:[0],}, 
+                   {label : 'Treat', size: 35, sets:[1],},
+                   {label : 'Anti-CCP', size : 108, sets:[2],}, 
+                   {label : 'DAS28', size:106, sets:[3],},
+                   {sets : [0,1], size:1},
+                   {sets : [0,2], size:1},
+                   {sets : [0,3], size:14},
+                   {sets : [1,2], size:6},
+                   {sets : [1,3], size:0},
+                   {sets : [2,3], size:1},
+                   {sets : [0,2,3], size:1}
+                       ];
+
+d3.select(".medical").datum(medicalSets).call(venn.VennDiagram().width(350).height(250));
+</script>
+
+
+<p>While they look somewhat different, if you rotate one of them and take the
+mirror image - they are in fact almost identical. The only real difference is
+in the intersection of the 'Anti-CCP &amp; DAS28 &amp; SE' set overlaps - where its
+marginally bigger in the Wilkinson version. While the Wilkinson version is
+more accurate, the size of this 3 way intersection is supposed to be the same
+as the intersection of 'Treat &amp; SE', so both versions are wrong here - because
+its impossible to lay this out perfectly.</p>
+
+<p>Since its so slow, and doesn't seem to have a huge benefit - I disabled this method of
+calculating the loss function by default. Instead I just calculate the loss on only the
+intersection of 2 sets, and ignore the higher order effects. If its going to
+be an approximation anyways, I'd much rather have a fast approximation.</p>
+
+<p>The Wilkinson paper is an interesting read if you're into that kind of thing.
+While our approaches are vaguely similar, his initial
+layout and optimization method are quite different from the approach I took.</p>
+
+<h3>Examples</h3>
+
+<p>The venn diagrams above don't really test out how well this performs on more
+complicated layouts.  So I took
+some datasets I happened to have on my computer, and ran some of them through
+here.</p>
+
+<div id="lastfm"></div>
+
+
+<h4>Last.fm Music Data</h4>
+
+<p>Lets try visualizing if <a href="http://www.thingsontop.com/roads-lead-radiohead-431.html">all roads really do lead to Radiohead
+</a>. Each artist is
+represented by the set of users that played them, with the data being grabbed
+from a <a href="http://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-360K.html">dataset of 360k last.fm
+users</a>.</p>
+
+<p>The goal here is
+to visualize the pernicious effect of popularity on collaborative filtering based
+recommender systems. Most of the artists here have more users in common with
+Radiohead than any other band, despite coming from different genres and eras
+of music. This effect totally dominates this graph, with Radiohead being at the centre and all other artists clustering around them.</p>
+
+<div class="lastfm"></div>
+
+
+<h4>Netflix</h4>
+
+<p>As a final example, lets see if we can get anything interesting out of the
+<a href="http://www.netflixprize.com/">Netflix Prize dataset</a>. I picked 6 movies, kind of at random - and then
+represented them using the set of users that gave the movie a 5 star rating.
+While its not all that interesting, I still like it because the movies here
+are sort of arranged by quality, with worse movies being farther right:</p>
+
+<div class="netflix"></div>
+
+
+<h3>Wrapping this all up</h3>
+
+<p>I've put the code on github <a href="http://github.com/benfred/venn.js">here</a> for anyone
+that wants to play around with it. Since its the first time I've written more
+than 10 lines of Javascript code, its probably mostly awful - but someone may
+still find it useful.</p>
+
+<p>While this code works reasonably well, there are a couple of areas that I
+think could use some improvement. The greedy layout I'm using sometimes picks
+up a local minima that the optimizer can't step out of. This is somewhat
+visible in the lastfm example, where the total loss could be
+reduced if John Lennon was inserted in between Elvis and Morrisey (as well as
+Philip Glass near Bach). I have some ideas on fixing this, but since this is really getting away from my goals here of learning Javascript and D3 I thought I'd release this as is.</p>
+
+<p>In the end, this wasn't a great project to learn D3 on - since the D3 part of it was so
+easy. The only tricky part in using D3 was getting the labels centred in
+the circles, and that really wasn't that hard. It was a decent first project in Javascript though. I got along pretty well
+here once I started treating Javascript as being Python code with a C++
+syntax, and just googling for the rare cases where that didn't just work. I
+got a little hung up on some of Javascripts limitations (dictionaries
+can only be keyed by strings etc) but its not a completely horrible language
+to work with.</p>
+
+<script type="text/javascript">
+
+var movieSets=[{size: 38753, label: 'Amelie', sets:[0],}, 
+               {size: 70153, label: 'Pulp Fiction', sets:[1],}, 
+               {size: 37837, label: 'Miss Congeniality', sets:[2],}, 
+               {size: 40345, label: 'Armageddon', sets:[3],}, 
+               {size: 6209, label: 'Rashomon', sets:[4],}, 
+               {size: 15611, label: 'Coyote Ugly', sets:[5],},
+               {size: 15197, sets: [0, 1]}, 
+               {size: 1829, sets: [0, 2]}, 
+               {size: 1218, sets: [0, 3]}, 
+               {size: 2087, sets: [0, 4]}, 
+               {size: 610, sets: [0, 5]}, 
+               {size: 3854, sets: [1, 2]}, 
+               {size: 6593, sets: [1, 3]}, 
+               {size: 2799, sets: [1, 4]}, 
+               {size: 2206, sets: [1, 5]}, 
+               {size: 10536, sets: [2, 3]}, 
+               {size: 132, sets: [2, 4]}, 
+               {size: 5965, sets: [2, 5]}, 
+               {size: 143, sets: [3, 4]}, 
+               {size: 5699, sets: [3, 5]}, 
+               {size: 38, sets: [4, 5]}];
+
+d3.select(".netflix").datum(movieSets).call(venn.VennDiagram().width(w).height(w*.7));
+
+var musicSets = [{label: 'Radiohead', size: 77348, sets:[0]},
+ {label: 'Thom Yorke', size: 5621, sets:[1]},
+ {label: 'John Lennon', size: 7773, sets:[2]},
+ {label: 'Kanye West', size: 27053, sets:[3]},
+ {label: 'Eminem', size: 19056, sets:[4]},
+ {label: 'Elvis Presley', size: 15839, sets:[5]},
+ {label: 'Explosions in the Sky', size: 10813, sets:[6]},
+ {label: 'Bach', size: 9264, sets:[7]},
+ {label: 'Mozart', size: 3959, sets:[8]},
+ {label: 'Philip Glass', size: 4793, sets:[9]},
+ {label: 'St. Germain', size: 4136, sets:[10]},
+ {label: 'Morrissey', size: 10945, sets:[11]},
+ {label: 'Outkast', size: 8444, sets:[12]},
+ {sets: [0, 1], size: 4832},
+ {sets: [0, 2], size: 2602},
+ {sets: [0, 3], size: 6141},
+ {sets: [0, 4], size: 2723},
+ {sets: [0, 5], size: 3177},
+ {sets: [0, 6], size: 5384},
+ {sets: [0, 7], size: 2252},
+ {sets: [0, 8], size: 877},
+ {sets: [0, 9], size: 1663},
+ {sets: [0, 10], size: 899},
+ {sets: [0, 11], size: 4557},
+ {sets: [0, 12], size: 2332},
+ {sets: [1, 2], size: 162},
+ {sets: [1, 3], size: 396},
+ {sets: [1, 4], size: 133},
+ {sets: [1, 5], size: 135},
+ {sets: [1, 6], size: 511},
+ {sets: [1, 7], size: 159},
+ {sets: [1, 8], size: 47},
+ {sets: [1, 9], size: 168},
+ {sets: [1, 10], size: 68},
+ {sets: [1, 11], size: 336},
+ {sets: [1, 12], size: 172},
+ {sets: [2, 3], size: 406},
+ {sets: [2, 4], size: 350},
+ {sets: [2, 5], size: 1335},
+ {sets: [2, 6], size: 145},
+ {sets: [2, 7], size: 347},
+ {sets: [2, 8], size: 176},
+ {sets: [2, 9], size: 119},
+ {sets: [2, 10], size: 46},
+ {sets: [2, 11], size: 418},
+ {sets: [2, 12], size: 146},
+ {sets: [3, 4], size: 5465},
+ {sets: [3, 5], size: 849},
+ {sets: [3, 6], size: 724},
+ {sets: [3, 7], size: 273},
+ {sets: [3, 8], size: 143},
+ {sets: [3, 9], size: 180},
+ {sets: [3, 10], size: 218},
+ {sets: [3, 11], size: 599},
+ {sets: [3, 12], size: 3453},
+ {sets: [4, 5], size: 977},
+ {sets: [4, 6], size: 232},
+ {sets: [4, 7], size: 250},
+ {sets: [4, 8], size: 166},
+ {sets: [4, 9], size: 97},
+ {sets: [4, 10], size: 106},
+ {sets: [4, 11], size: 225},
+ {sets: [4, 12], size: 1807},
+ {sets: [5, 6], size: 196},
+ {sets: [5, 7], size: 642},
+ {sets: [5, 8], size: 336},
+ {sets: [5, 9], size: 165},
+ {sets: [5, 10], size: 143},
+ {sets: [5, 11], size: 782},
+ {sets: [5, 12], size: 332},
+ {sets: [6, 7], size: 262},
+ {sets: [6, 8], size: 85},
+ {sets: [6, 9], size: 284},
+ {sets: [6, 10], size: 68},
+ {sets: [6, 11], size: 363},
+ {sets: [6, 12], size: 218},
+ {sets: [7, 8], size: 1581},
+ {sets: [7, 9], size: 716},
+ {sets: [7, 10], size: 133},
+ {sets: [7, 11], size: 254},
+ {sets: [7, 12], size: 132},
+ {sets: [8, 9], size: 280},
+ {sets: [8, 10], size: 53},
+ {sets: [8, 11], size: 117},
+ {sets: [8, 12], size: 67},
+ {sets: [9, 10], size: 57},
+ {sets: [9, 11], size: 184},
+ {sets: [9, 12], size: 89},
+ {sets: [10, 11], size: 51},
+ {sets: [10, 12], size: 115},
+ {sets: [11, 12], size: 162}];
+
+
+d3.select(".lastfm").datum(musicSets).call(venn.VennDiagram().width(w).height(w));
+
+</script>
+
+
+
+<div class="well">
+<b>Come work with me!</b> We're looking for a talented Data Engineer or Data Scientist to the join the data products team at Flipboard in Vancouver. Send me an email at
+<a href="mailto://ben@flipboard.com">ben@flipboard.com</a> or check out the <a
+ href="http://hire.jobvite.com/CompanyJobs/Careers.aspx?nl=1&k=Job&j=o9Ii1fwU&s=Ben">job description</a> for more information.
+ </div>
+
+<hr style="margin-bottom:5px">
+<!-- <div style="text-align:center;color:#ccc">§</div> -->
+
+
+<small style="font-size:12px;color:#999">Last updated on 29 June 2015</small>
+
+
+    </div></div>
+    </div> <!-- /container -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://static.benfrederickson.com.s3-website-us-east-1.amazonaws.com/google-code-prettify/prettify.js"></script>
+    <script src="http://static.benfrederickson.com.s3-website-us-east-1.amazonaws.com/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
