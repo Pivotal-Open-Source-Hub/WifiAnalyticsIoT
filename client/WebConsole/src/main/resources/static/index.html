@@ -42,7 +42,8 @@ var dataNodes;
 var color;
 var pis;
 
-$.getJSON( "controller/getPIs", function(data) {
+//$.getJSON( "controller/getPIs", function(data) {
+d3.json( "controller/getPIs", function(data) {	
 	var piNodes = d3.range(data.devices.length).map(function(i) { 
 			return {
 				radius: 100, 
@@ -56,21 +57,23 @@ $.getJSON( "controller/getPIs", function(data) {
 	
 	svg
 	.selectAll("circle")
-    .data(piNodes)
+    .data(piNodes, function(d) { return d.name; })
 		.enter()
 		.append("svg:circle")
- 	  	.attr("stroke-width", "3")
-  	 	.attr("stroke-dasharray", "5,5")
-   		.attr("fill-opacity", 0.0)		
 	    .attr("r", function(d) { return 100; })
 	    .attr("cx", function(d) { return d.x; })
-	    .attr("cy", function(d) { return d.y; });
+	    .attr("cy", function(d) { return d.y; })	
+	  	.attr("stroke-width", "3")
+	 	.attr("stroke-dasharray", "5,5")
+		.attr("fill-opacity", 0.0);		
+
 	
 	
 });
 
 
-$.getJSON( "controller/getDeviceMap", function(data) {
+//$.getJSON( "controller/getDeviceMap", function(data) {
+d3.json( "controller/getDeviceMap", function(data) {	
 		var nodes = d3.range(data.devices.length).map(function(i) { 
 				return {
 					radius: Math.random() * 12 + 4, 
@@ -86,7 +89,7 @@ $.getJSON( "controller/getDeviceMap", function(data) {
 		
 		svg
 			.selectAll("circle")
-		    .data(nodes)
+		    .data(nodes, function(d) { return d.name; })
    			.enter()
 	   		.append("svg:circle")
 			    .attr("r", function(d) { return d.radius - 2; })
@@ -100,9 +103,38 @@ $.getJSON( "controller/getDeviceMap", function(data) {
 	
 var updateData = function() {
       
+//	$.getJSON( "controller/getPIs", function(data) {
+	/*
+	d3.json( "controller/getPIs", function(data) {
+		var piNodes = d3.range(data.devices.length).map(function(i) { 
+				return {
+					radius: 100, 
+					name: data.devices[i].deviceId,
+					x: data.devices[i].x, 
+					y: data.devices[i].x
+				};
+			});
+		color = d3.scale.category10();                
+		pis = piNodes;
+		
+		svg
+		.selectAll("circle")
+	    .data(piNodes)
+			.enter()
+			.append("svg:circle")
+	 	  	.attr("stroke-width", "3")
+	  	 	.attr("stroke-dasharray", "5,5")
+	   		.attr("fill-opacity", 0.0)		
+		    .attr("r", function(d) { return 100; })
+		    .attr("cx", function(d) { return d.x; })
+		    .attr("cy", function(d) { return d.y; });
+		
+		
+	});
+	*/
 	
-	
-	$.getJSON( "controller/getDeviceMap", function(data) {
+//	$.getJSON( "controller/getDeviceMap", function(data) {
+	d3.json( "controller/getDeviceMap", function(data) {
 		var nodes = d3.range(data.devices.length).map(function(i) { 
 				return {
 					radius: Math.random() * 12 + 4, 
@@ -112,27 +144,43 @@ var updateData = function() {
 				};
 			});
 		
-		color = d3.scale.category10();
+//		dataNodes = [];
+		/*
+		for (var i = 0; i<pis.length; i++)
+			dataNodes.push(pis[i]);
+*/
+/*
+		for (var i = 0; i<nodes.length; i++)
+			dataNodes.push(nodes[i]);
+	*/	
 		
 		dataNodes = nodes;
 		
-		var duration = 200;
-		var delay = 0;
+		var existingNodes = svg.selectAll('circle');
 		
-		var vis = svg.selectAll('circle')
-		  .data(dataNodes, function(d) { return d.name; });
+		var vis = svg.selectAll('circle').data(dataNodes, function(d) { return d.name; });
+		  //.data(dataNodes, function(d) { return d.name; });
 		
 		
 		 
 		// update - This only applies to updating nodes
+		/*
 		vis
 		  .transition()
 		  .duration(duration)
 		  .delay(function(d, i) {delay = i * 7; return delay;}) 
 		  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
 		  .attr('r', function(d) { return d.r; })
-		 
+		 */
 		// enter
+		
+		vis
+		  //.exit()
+		  //.transition()
+		  //.duration(duration + delay)
+		  //.style('opacity', 0)
+		  //.exit()
+		  .remove();
 		vis		
 		  .enter()
 		  .append('svg:circle')
@@ -142,9 +190,9 @@ var updateData = function() {
 		  .style("fill", function(d, i) { return color(i % 3); })
 		  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
 		  .style('opacity', 0) 
-		  .transition()
-		  .duration(duration * 1.2)
-			.style('opacity', 1);
+		  //.transition()
+		  //.duration(duration * 1.2)
+		  .style('opacity', 1);
 		 
 		// exit
 		/*

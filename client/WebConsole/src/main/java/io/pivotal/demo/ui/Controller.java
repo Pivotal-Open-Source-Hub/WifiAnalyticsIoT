@@ -20,12 +20,7 @@ public class Controller {
         // return repository.findAll(pageable.getPageNumber(), pageable.getPageSize());
     }
     
-    
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public void /*PagedCities*/ search(@RequestParam("name") String name) {
-        //return repository.findByNameContains(name, pageable.getPageNumber(), pageable.getPageSize());
-    }
-    
+ 
     @RequestMapping(value="/getDeviceMap")
     public @ResponseBody DeviceMap getDeviceMap(){
     	System.out.println("Called");
@@ -42,9 +37,9 @@ public class Controller {
     	
     	DeviceMap map = new DeviceMap();
         
-        map.addDevice("PI-1", 100, 100);
-        map.addDevice("PI-2", 800, 100);
-        map.addDevice("PI-3", 100, 200);
+        map.addDevice("PI-1", 40, 40);
+        map.addDevice("PI-2", 50, 50);
+        map.addDevice("PI-3", 60, 60);
         
         return map;
     }        
