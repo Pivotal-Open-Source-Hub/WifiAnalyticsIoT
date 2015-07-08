@@ -37,4 +37,17 @@ public class Controller {
     	return map;
     }    
     
+    @RequestMapping(value="/getPIs")
+    public @ResponseBody DeviceMap getPIs(){
+    	
+    	DeviceMap map = new DeviceMap();
+        
+        map.addDevice("PI-1", 100, 100);
+        map.addDevice("PI-2", 800, 100);
+        map.addDevice("PI-3", 100, 200);
+        
+        return map;
+    }        
+    
+    
 }
