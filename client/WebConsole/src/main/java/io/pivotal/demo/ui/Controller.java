@@ -23,8 +23,8 @@ public class Controller {
  
     @RequestMapping(value="/getDeviceMap")
     public @ResponseBody DeviceMap getDeviceMap(){
-    	System.out.println("Called");
-        DeviceMap map = new DeviceMap();
+    	
+    	DeviceMap map = new DeviceMap();
         
         for (int i=0; i<200; i++){
 	        map.addDevice("i"+i, (int)(Math.random()*100+Math.random()*100), (int)(Math.random()*100+Math.random()*100));
@@ -37,12 +37,18 @@ public class Controller {
     	
     	DeviceMap map = new DeviceMap();
         
-        map.addDevice("PI-1", 40, 40);
-        map.addDevice("PI-2", 50, 50);
-        map.addDevice("PI-3", 60, 60);
+        map.addDevice("PI-1", 100, 100);
+        map.addDevice("PI-2", 800, 100);
+        map.addDevice("PI-3", 400, 600);
         
         return map;
     }        
     
+    @RequestMapping(value="/updatePILocation")
+    public void updatePILocation(@RequestParam("deviceId") String deviceId, @RequestParam("x") int x, @RequestParam("y") int y){
+    	
+    	System.out.println("Location of device "+deviceId+" updated to "+x+" : "+y);
+    	
+    }   
     
 }

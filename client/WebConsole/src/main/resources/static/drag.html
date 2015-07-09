@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<meta name="description" content="Example of use of the D3.js library" />
+        <meta charset="utf-8">
+        <title>D3.js library example</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+    <style type="text/css">
+
+circle {
+  stroke: #000;
+  stroke-opacity: .5;
+}
+
+
+    </style>		
+	</head>
+	<body>
+		<svg id="map" width="1200" height="800"></svg>
+		<br/>
+		
+		<script>
+			var MAX_ZOOM_IN = 2.0;
+			var MAX_ZOOM_OUT = 0.2;
+			var zoomStep = 0.2;
+			var actualZoomLevel = 1.0;
+			var MOVE_STEP = 100;
+			var nodes, nodes_data, zoomable_layer, zoom;
+					
+			var map = d3.select("#map");
+				
+			var container = map.append("g");
+			
+
+			
+			d3.json( "controller/getPIs", function(data) {	
+				var piNodes = d3.range(data.devices.length).map(function(i) { 
+						return {
+							radius: 100, 
+							name: data.devices[i].deviceId,
+							x: data.devices[i].x, 
+							y: data.devices[i].y
+						};
+					});
+				color = d3.scale.category10();                
+				pis = piNodes;
+				
+				/*
+				container
+				.selectAll("circle")
+			    .data(piNodes, function(d) { return d.name; })
+					.enter()
+					.append("circle")
+				    .attr("r", function(d) { return 100; })
+				    .attr("cx", function(d) { return d.x; })
+				    .attr("cy", function(d) { return d.y; })	
+				  	.attr("stroke-width", "3") 
+				 	.attr("stroke-dasharray", "5,5")
+					.attr("fill-opacity", 0.0)
+					.classed('pi_circle', true);
+				
+				*/
+				container 
+					.selectAll()
+					.data(piNodes, function(d) { return d.name; })
+					.enter()
+				  	.append("image")
+				  	.attr('x', function(d) { return d.x ; })
+			     	.attr('y', function(d) { return d.y ; })
+			     	.attr('width', 250)
+			     	.attr('height', 250)         	
+				 	.attr("xlink:href", "/antenna.png")
+				 	.classed('pi_image', true)
+				 	.classed('draggable', true);
+					
+
+				//Set the drag behavior on the objects having the "draggable" class and set their position on the viewport (by the "node_data" matrix)		
+				container.selectAll(".draggable").call(drag).data(nodes_data);
+				
+				
+			});			
+			
+			
+			
+			//Create the zoom behavior to set for the draw
+			zoom = d3.behavior.zoom().scaleExtent([MAX_ZOOM_OUT, MAX_ZOOM_IN]).on('zoom', zoomed);
+			
+			//Function called on the zoom event. It translate the draw on the zoommed point and scale with a certain factor
+			function zoomed() {
+				container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+			}
+			
+			//Create the drag and drop behavior to set for the objects crated
+			var drag = d3.behavior.drag()
+				.origin(function(d) { return d; })
+				.on("dragstart", dragstarted)
+				.on("drag", dragged)
+				.on("dragend", dragend);
+			
+			//Called when drag event starts. It stop the propagation of the click event
+			function dragstarted(d){
+				d3.event.sourceEvent.stopPropagation();
+			}
+
+			function dragend(d){
+				
+				/*
+				container.selectAll(".pi_circle")
+					.data(piNodes, function(d) { return d.name; })
+					.enter()
+					.append("circle")
+				    .attr("r", function(d) { return 100; })
+				    .attr("cx", function(d) { return d.x; })
+				    .attr("cy", function(d) { return d.y; })	
+				  	.attr("stroke-width", "3") 
+				 	.attr("stroke-dasharray", "5,5")
+					.attr("fill-opacity", 0.0)
+					.classed('pi_circle', true);
+				*/
+			}
+			
+			
+			//Called when the drag event occurs (object should be moved)
+			function dragged(d){
+				d.x = d3.event.x;
+				d.y = d3.event.y;
+				//Translate the object on the actual moved point
+				d3.select(this).attr({
+					transform: "translate(" + d.x + "," + d.y + ")"
+				});
+			}
+			
+			//Set the zoom behavior on the container variable (the draw), disable mousedown event for the zoom and set the function to call on the double click	event		
+			container.call(zoom).on("mousedown.zoom", null);
+							
+			//Matrix containing the x and y coordinates of the created objects (used for draggable events)
+			nodes_data = [
+				{
+				  x: 0,
+				  y: 0
+				}, {
+				  x: 0,
+				  y: 0
+				}, {
+				  x: 0,
+				  y: 0
+				}
+			];
+			
+			
+			
+			function zoomIn(){
+				//Calculate and set the new zoom level 
+				actualZoomLevel = roundFloat(parseFloat(actualZoomLevel) + parseFloat(zoomStep));
+				zoom.scale(actualZoomLevel);
+				//Get the actual position of the container
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				//Esecute the transformation setting the actual position and the new zoom level
+				container.attr("transform", "translate(" + xPosition + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function zoomOut(){
+				actualZoomLevel = roundFloat(parseFloat(actualZoomLevel) - parseFloat(zoomStep));
+				zoom.scale(actualZoomLevel);
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				container.attr("transform", "translate(" + xPosition + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function moveDrawLeft(){
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				container.attr("transform", "translate(" + (xPosition - MOVE_STEP) + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function moveDrawRight(){
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				container.attr("transform", "translate(" + (xPosition + MOVE_STEP) + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function moveDrawTop(){
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				container.attr("transform", "translate(" + xPosition + ", " + (yPosition - MOVE_STEP) + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function moveDrawBottom(){
+				var xPosition = d3.transform(container.attr("transform")).translate[0];
+				var yPosition = d3.transform(container.attr("transform")).translate[1];
+				container.attr("transform", "translate(" + xPosition + ", " +(yPosition + MOVE_STEP) + ")scale(" + zoom.scale() + ")");
+			}
+			
+			function roundFloat(value){
+				return value.toFixed(2);
+			}
+			
+		</script>
+		<br/>
+		<button id="zoomIn" onclick="zoomIn()">Zoom In</button>
+		<button id="zoomOut" onclick="zoomOut()">Zoom Out</button>
+		<button id="moveLeft" onclick="moveDrawLeft()">Move left</button>
+		<button id="moveRight" onclick="moveDrawRight()">Move right</button>
+		<button id="moveTop" onclick="moveDrawTop()">Move top</button>
+		<button id="moveBottom" onclick="moveDrawBottom()">Move bottom</button>
+    </body>
+</html>

@@ -2,15 +2,9 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-
-    <script type="text/javascript" src="d3/d3.js"></script>
-    <script type="text/javascript" src="d3/d3.geom.js"></script>
-    <script type="text/javascript" src="d3/d3.layout.js"></script>
-
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<!-- script src="http://d3js.org/d3.v2.min.js?2.9.6"></script> -->
- 
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+   <link rel="stylesheet" type="text/css" href="style.css"/>
+   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
     <style type="text/css">
 
 circle {
@@ -18,61 +12,161 @@ circle {
   stroke-opacity: .5;
 }
 
-    </style>
-  </head>
-  <body>
-  
-    <div id="body">
-      <div id="footer">
-        Collision Detection
-        <div class="hint">move the mouse to repel nodes</div>
-      </div>
-    </div>  
-    
-    <script type="text/javascript">
 
-var w = 1280,
-    h = 800;
+    </style>		
+	</head>
+	<body>
+	
+	<div id="body">
+		<svg id="map" width="1200" height="800"></svg>
+	    <div id="footer">
+	      Device Trilateration
+	      <div class="hint">Position relative to the raspberry PIs</div>
+	    </div>
+    </div>
 
-var svg = d3.select("#body").append("svg:svg")
-.attr("width", w)
-.attr("height", h);
+    <script>
+
+
 
 var dataNodes;
 var color;
 var pis;
 
-//$.getJSON( "controller/getPIs", function(data) {
+var root;
+
+var MAX_ZOOM_IN = 2.0;
+var MAX_ZOOM_OUT = 0.2;
+var zoomStep = 0.2;
+var actualZoomLevel = 1.0;
+var MOVE_STEP = 100;
+var nodes_data, zoomable_layer, zoom;
+		
+var map = d3.select("#map");
+	
+var container = map.append("g");
+
+
+
 d3.json( "controller/getPIs", function(data) {	
 	var piNodes = d3.range(data.devices.length).map(function(i) { 
 			return {
 				radius: 100, 
-				name: data.devices[i].deviceId,
+				deviceId: data.devices[i].deviceId,
 				x: data.devices[i].x, 
-				y: data.devices[i].x
+				y: data.devices[i].y
 			};
 		});
 	color = d3.scale.category10();                
 	pis = piNodes;
 	
-	svg
-	.selectAll("circle")
-    .data(piNodes, function(d) { return d.name; })
+
+	container 
+		.selectAll()
+		.data(piNodes, function(d) { return d.deviceId; })
 		.enter()
-		.append("svg:circle")
-	    .attr("r", function(d) { return 100; })
-	    .attr("cx", function(d) { return d.x; })
-	    .attr("cy", function(d) { return d.y; })	
-	  	.attr("stroke-width", "3")
-	 	.attr("stroke-dasharray", "5,5")
-		.attr("fill-opacity", 0.0);		
+	  	.append("image")
+	  	.attr('x', function(d) { return d.x ; })
+     	.attr('y', function(d) { return d.y ; })
+     	.attr('width', 250)
+     	.attr('height', 250)
+     	.attr('deviceId', function(d) { return d.deviceId ; })
+	 	.attr("xlink:href", "/antenna.png")
+	 	.classed('pi_image', true)
+	 	.classed('draggable', true);
+		
 
+	//Set the drag behavior on the objects having the "draggable" class and set their position on the viewport (by the "node_data" matrix)		
+	container.selectAll(".draggable").call(drag).data(nodes_data);
 	
 	
-});
+});			
 
 
-//$.getJSON( "controller/getDeviceMap", function(data) {
+//Create the zoom behavior to set for the draw
+zoom = d3.behavior.zoom().scaleExtent([MAX_ZOOM_OUT, MAX_ZOOM_IN]).on('zoom', zoomed);
+
+//Function called on the zoom event. It translate the draw on the zoommed point and scale with a certain factor
+function zoomed() {
+	container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+//Create the drag and drop behavior to set for the objects crated
+var drag = d3.behavior.drag()
+	.origin(function(d) { return d; })
+	.on("dragstart", dragstarted)
+	.on("drag", dragged)
+	.on("dragend", dragend);
+
+//Called when drag event starts. It stop the propagation of the click event
+function dragstarted(d){
+	d3.event.sourceEvent.stopPropagation();
+}
+
+function dragend(d){
+
+	var device = d3.select(this).attr('deviceId');
+	d3.json( "controller/updatePILocation?deviceId="+device+"&x="+d.x+"&y="+d.y, function(data) {	
+	});
+}
+
+
+//Called when the drag event occurs (object should be moved)
+function dragged(d){
+	d.x = d3.event.x;
+	d.y = d3.event.y;
+	
+	//Translate the object on the actual moved point
+	d3.select(this).attr({
+		transform: "translate(" + d.x + "," + d.y + ")"
+	});
+}
+
+//Set the zoom behavior on the container variable (the draw), disable mousedown event for the zoom and set the function to call on the double click	event		
+container.call(zoom).on("mousedown.zoom", null);
+				
+//Matrix containing the x and y coordinates of the created objects (used for draggable events)
+nodes_data = [
+	{
+	  x: 0,
+	  y: 0
+	}, {
+	  x: 0,
+	  y: 0
+	}, {
+	  x: 0,
+	  y: 0
+	}
+];
+
+
+
+function zoomIn(){
+	//Calculate and set the new zoom level 
+	actualZoomLevel = roundFloat(parseFloat(actualZoomLevel) + parseFloat(zoomStep));
+	zoom.scale(actualZoomLevel);
+	//Get the actual position of the container
+	var xPosition = d3.transform(container.attr("transform")).translate[0];
+	var yPosition = d3.transform(container.attr("transform")).translate[1];
+	//Esecute the transformation setting the actual position and the new zoom level
+	container.attr("transform", "translate(" + xPosition + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+}
+
+function zoomOut(){
+	actualZoomLevel = roundFloat(parseFloat(actualZoomLevel) - parseFloat(zoomStep));
+	zoom.scale(actualZoomLevel);
+	var xPosition = d3.transform(container.attr("transform")).translate[0];
+	var yPosition = d3.transform(container.attr("transform")).translate[1];
+	container.attr("transform", "translate(" + xPosition + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+}
+
+
+
+function roundFloat(value){
+	return value.toFixed(2);
+}
+  
+
 d3.json( "controller/getDeviceMap", function(data) {	
 		var nodes = d3.range(data.devices.length).map(function(i) { 
 				return {
@@ -86,12 +180,11 @@ d3.json( "controller/getDeviceMap", function(data) {
 		color = d3.scale.category10();                
 	
 		dataNodes = nodes;
-		
-		svg
+		container
 			.selectAll("circle")
-		    .data(nodes, function(d) { return d.name; })
+			.data(nodes, function(d) { return d.name; })
    			.enter()
-	   		.append("svg:circle")
+	   		.append("circle")
 			    .attr("r", function(d) { return d.radius - 2; })
 			    .attr("cx", function(d) { return d.x; })
 			    .attr("cy", function(d) { return d.y; })
@@ -103,37 +196,7 @@ d3.json( "controller/getDeviceMap", function(data) {
 	
 var updateData = function() {
       
-//	$.getJSON( "controller/getPIs", function(data) {
-	/*
-	d3.json( "controller/getPIs", function(data) {
-		var piNodes = d3.range(data.devices.length).map(function(i) { 
-				return {
-					radius: 100, 
-					name: data.devices[i].deviceId,
-					x: data.devices[i].x, 
-					y: data.devices[i].x
-				};
-			});
-		color = d3.scale.category10();                
-		pis = piNodes;
-		
-		svg
-		.selectAll("circle")
-	    .data(piNodes)
-			.enter()
-			.append("svg:circle")
-	 	  	.attr("stroke-width", "3")
-	  	 	.attr("stroke-dasharray", "5,5")
-	   		.attr("fill-opacity", 0.0)		
-		    .attr("r", function(d) { return 100; })
-		    .attr("cx", function(d) { return d.x; })
-		    .attr("cy", function(d) { return d.y; });
-		
-		
-	});
-	*/
-	
-//	$.getJSON( "controller/getDeviceMap", function(data) {
+
 	d3.json( "controller/getDeviceMap", function(data) {
 		var nodes = d3.range(data.devices.length).map(function(i) { 
 				return {
@@ -144,46 +207,22 @@ var updateData = function() {
 				};
 			});
 		
-//		dataNodes = [];
-		/*
-		for (var i = 0; i<pis.length; i++)
-			dataNodes.push(pis[i]);
-*/
-/*
-		for (var i = 0; i<nodes.length; i++)
-			dataNodes.push(nodes[i]);
-	*/	
 		
 		dataNodes = nodes;
 		
-		var existingNodes = svg.selectAll('circle');
+		var existingNodes = container.selectAll('circle');
 		
-		var vis = svg.selectAll('circle').data(dataNodes, function(d) { return d.name; });
-		  //.data(dataNodes, function(d) { return d.name; });
+		var vis = container.selectAll('circle').data(dataNodes, function(d) { return d.name; });
 		
 		
-		 
-		// update - This only applies to updating nodes
-		/*
-		vis
-		  .transition()
-		  .duration(duration)
-		  .delay(function(d, i) {delay = i * 7; return delay;}) 
-		  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
-		  .attr('r', function(d) { return d.r; })
-		 */
 		// enter
 		
-		vis
-		  //.exit()
-		  //.transition()
-		  //.duration(duration + delay)
-		  //.style('opacity', 0)
-		  //.exit()
+		container.selectAll('circle').data(dataNodes, function(d) { return d.name; })
 		  .remove();
-		vis		
+		
+		container.selectAll('circle').data(dataNodes, function(d) { return d.name; })
 		  .enter()
-		  .append('svg:circle')
+		  .append('circle')
 		  .attr("r", function(d) { return d.radius - 2; })
 		  .attr("cx", function(d) { return d.x; })
 		  .attr("cy", function(d) { return d.y; })
@@ -194,16 +233,6 @@ var updateData = function() {
 		  //.duration(duration * 1.2)
 		  .style('opacity', 1);
 		 
-		// exit
-		/*
-		vis
-		  .exit()
-		  .transition()
-		  .duration(duration + delay)
-		  .style('opacity', 0)
-		  .remove();	
-		*/
-
 		
 	});
     setTimeout(updateData, 2000);
@@ -214,47 +243,6 @@ var updateData = function() {
 setTimeout(updateData, 2000);
 
 
-
-           	  
-
-	
-   	
- 
-
-
-
-
-
-function collide(node) {
-var r = node.radius + 16,
-  nx1 = node.x - r,
-  nx2 = node.x + r,
-  ny1 = node.y - r,
-  ny2 = node.y + r;
-return function(quad, x1, y1, x2, y2) {
-if (quad.point && (quad.point !== node)) {
-  var x = node.x - quad.point.x,
-      y = node.y - quad.point.y,
-      l = Math.sqrt(x * x + y * y),
-      r = node.radius + quad.point.radius;
-  if (l < r) {
-    l = (l - r) / l * .5;
-    node.x -= x *= l;
-    node.y -= y *= l;
-    quad.point.x += x;
-    quad.point.y += y;
-  }
-}
-return x1 > nx2
-    || x2 < nx1
-    || y1 > ny2
-    || y2 < ny1;
-};
-
-
-
-
-}
 </script>
 </body>
 </html>    
