@@ -10,37 +10,45 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @ComponentScan
 public class ProbeRequest {
 
-	@JsonProperty
-	private String probe_timeepoch;
 	
-	@JsonProperty
+	@JsonProperty("deviceId")
 	private String device_id;
 	
-	@JsonProperty
+	@JsonProperty("signalDbm")
 	private int signal_dbm;
 	
-	@JsonProperty
-	private String hostname;
+	@JsonProperty("piId")
+	private String piId;
 	
-	@JsonProperty
+	@JsonProperty("frequencyMhz")
 	private int frequencyMhz;
 	
-	@JsonProperty
+	@JsonProperty("nanoTimestamp")
 	private long nanoTimestamp;
 	
 	public ProbeRequest() {}
 	
-	public ProbeRequest(String probe_timeepoch, String device_id, int signal_dbm, int frequencyMhz, long timestamp) throws UnknownHostException {
+	public ProbeRequest(String device_id, int signal_dbm, int frequencyMhz, long timestamp) throws UnknownHostException {
 		super();
-		this.probe_timeepoch = probe_timeepoch;
 		this.device_id = device_id;
 		this.signal_dbm = signal_dbm;
-		this.hostname = InetAddress.getLocalHost().getHostName();
+		this.piId = InetAddress.getLocalHost().getHostName();
 		this.frequencyMhz = frequencyMhz;
 		this.nanoTimestamp = timestamp;
 	}
 	
 	
+	
+	public ProbeRequest(String device_id, int signal_dbm, String piId,
+			int frequencyMhz, long nanoTimestamp) {
+		super();
+		this.device_id = device_id;
+		this.signal_dbm = signal_dbm;
+		this.piId = piId;
+		this.frequencyMhz = frequencyMhz;
+		this.nanoTimestamp = nanoTimestamp;
+	}
+
 	public long getNanoTimestamp() {
 		return nanoTimestamp;
 	}
@@ -58,13 +66,6 @@ public class ProbeRequest {
 	}
 
 	
-	
-	public String getProbe_timeepoch() {
-		return probe_timeepoch;
-	}
-	public void setProbe_timeepoch(String probe_timeepoch) {
-		this.probe_timeepoch = probe_timeepoch;
-	}
 	public String getDevice_id() {
 		return device_id;
 	}
@@ -78,12 +79,12 @@ public class ProbeRequest {
 		this.signal_dbm = signal_dbm;
 	}
 	
-	public String getHostname() {
-		return hostname;
+	public String getPiId() {
+		return piId;
 	}
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
+	public void setPiId(String piId) {
+		this.piId = piId;
 	}
 
 

@@ -1,17 +1,19 @@
 package io.pivotal.demo.ui;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DeviceLocation implements Serializable, Comparable {
+public class DeviceLocation{
 
-	private int x;
-	private int y;
+	private double x;
+
+	private double y;
+	
 	private String deviceId;
-
+	
 	
 	public DeviceLocation(){}
 	
-	public DeviceLocation(String deviceId, int x, int y) {
+	public DeviceLocation(String deviceId, double x, double y) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -19,16 +21,16 @@ public class DeviceLocation implements Serializable, Comparable {
 	}
 	
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	public String getDeviceId() {
@@ -38,13 +40,6 @@ public class DeviceLocation implements Serializable, Comparable {
 		this.deviceId = deviceId;
 	}
 
-	@Override
-	public int compareTo(Object o) {
-		DeviceLocation l = (DeviceLocation)o;
-		return this.deviceId.compareTo(l.deviceId);
-	}
-	
-	
-	
+
 	
 }

@@ -1,4 +1,4 @@
-package io.pivotal.iot.example;
+package io.pivotal.demo.trilateration;
 
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.MultivariateJacobianFunction;

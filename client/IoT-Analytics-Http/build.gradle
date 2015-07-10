@@ -31,6 +31,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.springframework.boot:spring-boot-starter"
     compile("org.springframework:spring-web")
+	testCompile("junit:junit:4.12")
+	
 
 }
 

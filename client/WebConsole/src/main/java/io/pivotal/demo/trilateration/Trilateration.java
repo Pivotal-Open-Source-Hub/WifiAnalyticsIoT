@@ -1,4 +1,4 @@
-package io.pivotal.iot.example;
+package io.pivotal.demo.trilateration;
 
 
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
@@ -24,28 +24,19 @@ import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer.Optim
 		  * Calculate the TrilaterationG using NonLinearLeastSquareSolver
 		  */
 		 public static double[] calculate(double[][] positions, double[] distances){
-			 
-			 TrilaterationFunction trilaterationFunction = new TrilaterationFunction(positions, distances);
-			 NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(trilaterationFunction, new LevenbergMarquardtOptimizer());
-	 
-			 Optimum optimum = solver.solve();
-			 return optimum.getPoint().toArray();
-			 
-		 }
+			 try{
+				 TrilaterationFunction trilaterationFunction = new TrilaterationFunction(positions, distances);
+				 NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(trilaterationFunction, new LevenbergMarquardtOptimizer());
 		 
-  		public static void main(String[] args){
-			
-			double distance1 = calculateDistanceInMeters(-82, 5180);
-			double distance2 = calculateDistanceInMeters(-54, 5180);
-			double distance3 = calculateDistanceInMeters(-32, 5180);
-			
-			
-			System.out.println("Distance 1: "+distance1);
-			System.out.println("Distance 2: "+distance2);
-			System.out.println("Distance 3: "+distance3);
-			
-		}
-									
+				 Optimum optimum = solver.solve();
+				 return optimum.getPoint().toArray();
+			 }
+			 catch(Exception e){
+				 System.out.println("Could not update position: "+e.getMessage());
+				 return new double[]{0.0,0.0};
+			 }
+		 }
+					
 																					
 	}
 	

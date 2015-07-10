@@ -1,4 +1,4 @@
-package io.pivotal.iot.example;
+package io.pivotal.demo.trilateration;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresFactory;
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
@@ -57,13 +57,13 @@ public class NonLinearLeastSquaresSolver {
 		for (int j = 0; j < initialPoint.length; j++) {
 			initialPoint[j] /= numberOfPositions;
 		}
-		
+		/*
 		StringBuilder output = new StringBuilder("initialPoint: ");
 		for (int i = 0; i < initialPoint.length; i++) {
 			output.append(initialPoint[i]).append(" ");
 		}
 		System.out.println(output.toString());
-
+*/
 		double[] target = new double[numberOfPositions];
 		double[] distances = function.getDistances();
 		double[] weights = new double[target.length];

@@ -1,4 +1,4 @@
-levelInDb=payload.get("signal_dbm").doubleValue()
+levelInDb=payload.get("signalDbm").doubleValue()
 freqInMHz=payload.get("frequencyMhz").doubleValue()
 			
 /**

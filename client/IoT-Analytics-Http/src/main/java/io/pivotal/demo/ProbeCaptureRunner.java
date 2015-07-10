@@ -61,14 +61,13 @@ public class ProbeCaptureRunner implements CommandLineRunner {
 	}
 	protected void processLine(String line){
 		StringTokenizer st = new StringTokenizer(line);
-		String timeepoch = st.nextToken();
 		String deviceId = st.nextToken();
 		int signal_dbm = Integer.parseInt(st.nextToken());
 		int frequency = Integer.parseInt(st.nextToken());
 		
 		try{
 			long nanoTimestamp = System.nanoTime();
-			ProbeRequest req = new ProbeRequest(timeepoch,deviceId,signal_dbm, frequency, nanoTimestamp);
+			ProbeRequest req = new ProbeRequest(deviceId,signal_dbm, frequency, nanoTimestamp);
 			putProbeReq(req);
 		}
 		catch(Exception e){

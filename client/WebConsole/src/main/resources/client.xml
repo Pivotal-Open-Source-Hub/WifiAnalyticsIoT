@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE client-cache PUBLIC
+        "-//GemStone Systems, Inc.//GemFire Declarative Caching 8.0//EN"
+        "http://www.gemstone.com/dtd/cache8_0.dtd">
+
+<client-cache>
+    <pool name="client" subscription-enabled="true">
+        <locator host="192.168.2.1" port="10334" />
+    </pool>
+    
+   <pdx read-serialized="false">
+		<pdx-serializer>
+			<class-name>
+       			com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer
+      		</class-name>
+      		<parameter name="classes">
+      			<string>io\.pivotal\.demo\..*</string>
+     		</parameter>
+		</pdx-serializer>
+    </pdx>
+    
+    <region name="Distances">
+        <region-attributes refid="PROXY">
+            <cache-listener>
+                <class-name>io.pivotal.demo.trilateration.CalculateLocationDistanceListener</class-name>
+            </cache-listener>
+        </region-attributes>
+    </region>
+
+    <region name="DeviceLocations">
+        <region-attributes refid="PROXY">
+        </region-attributes>
+    </region>
+    
+    <region name="RaspberryPIs">
+        <region-attributes refid="PROXY">
+        </region-attributes>
+    </region>
+    
+</client-cache>

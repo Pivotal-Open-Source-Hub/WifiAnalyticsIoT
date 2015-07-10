@@ -1,23 +1,24 @@
 package io.pivotal.demo.ui;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class DeviceMap implements Serializable{
 
-	public Set<DeviceLocation> devices = new TreeSet<DeviceLocation>();
+	public List<DeviceLocation> devices = new ArrayList<DeviceLocation>();
 
-	public Set<DeviceLocation> getDevices() {
+	public Collection<DeviceLocation> getDevices() {
 		return devices;
 	}
 
-	public void setDevices(Set<DeviceLocation> devices) {
+	public void setDevices(List<DeviceLocation> devices) {
 		this.devices = devices;
 	}
 	
 	
-	public void addDevice(String deviceId, int x, int y){
+	public void addDevice(String deviceId, double x, double y){
 		devices.add(new DeviceLocation(deviceId, x, y));
 	}
 	
