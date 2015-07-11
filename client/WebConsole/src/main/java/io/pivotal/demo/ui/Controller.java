@@ -2,6 +2,7 @@ package io.pivotal.demo.ui;
 
 
 import io.pivotal.demo.trilateration.CalculateLocationDistanceListener;
+import io.pivotal.demo.trilateration.Scale;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -57,6 +58,7 @@ public class Controller {
     	
     	DeviceLocation piLocation = new DeviceLocation(deviceId, x, y);
     	GeodeClient.getInstance().setPILocation(piLocation);
+    	Scale.updateScale();
     	recalculateAllPositions();
     }   
     

@@ -3,8 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
    <link rel="stylesheet" type="text/css" href="style.css"/>
+   <link rel="stylesheet" type="text/css" href="tipsy.css"/>
    <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
 	<script src="js/d3.v3.min.js"></script>
+	<script src="js/jquery.tipsy.js"></script>
     <style type="text/css">
 
 circle {
@@ -12,13 +14,12 @@ circle {
   stroke-opacity: .5;
 }
 
-
     </style>		
 	</head>
 	<body>
 	
 	<div id="body">
-		<svg id="map" width="1200" height="800"></svg>
+		<svg id="map" width="1200" height="900"></svg>
 	    <div id="footer">
 	      Device Trilateration
 	      <div class="hint">Position relative to the raspberry PIs</div>
@@ -74,7 +75,18 @@ d3.json( "controller/getPIs", function(data) {
 	 	.attr("xlink:href", "/antenna.png")
 	 	.classed('pi_image', true)
 	 	.classed('draggable', true);
-		
+
+    
+    $('image').tipsy({ 
+        gravity: 'w',
+        fade: true,
+        html: true, 
+        title: function() {
+          var d = this.attributes;
+          return '<span> Device ID: ' + d.deviceId.value + '</span>'; 
+        }
+      });    
+    
 
 	//Set the drag behavior on the objects having the "draggable" class and set their position on the viewport (by the "node_data" matrix)		
 	container.selectAll(".draggable").call(drag).data(nodes_data);
@@ -167,6 +179,7 @@ function roundFloat(value){
 }
   
 
+
 	
 var updateData = function() {
       
@@ -203,6 +216,16 @@ var updateData = function() {
 		  .style("fill", function(d, i) { return color(i % 3); })
 		  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
 		  .style('opacity', 1);
+		
+	      $('svg circle').tipsy({ 
+	          gravity: 'w',
+	          fade: true,
+	          html: true, 
+	          title: function() {
+	            var d = this.__data__;
+	            return '<span> Device ID: ' + d.name + '</span>'; 
+	          }
+	        });
 		 
 		
 	});
@@ -212,6 +235,7 @@ var updateData = function() {
 
 
 setTimeout(updateData, 1000);
+
 
 
 </script>

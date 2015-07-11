@@ -35,9 +35,54 @@ public class EmulateDevicesTest {
 	
 	private RestTemplate restTemplate = new RestTemplate();
 
+	@Test public void testControlledSignals() throws UnknownHostException {
+
+		
+		int frequency = 2412;
+
+		// equaly distance from all circles
+		String device1 = devices[0];
+		int signalDev1Pi1 = -80;
+		int signalDev1Pi2 = -80;
+		int signalDev1Pi3 = -80;
+		
+		ProbeRequest req1 = new ProbeRequest(device1,signalDev1Pi1, pis[0] ,frequency, System.nanoTime());
+		ProbeRequest req2 = new ProbeRequest(device1,signalDev1Pi2, pis[1] ,frequency, System.nanoTime());
+		ProbeRequest req3 = new ProbeRequest(device1,signalDev1Pi3, pis[2] ,frequency, System.nanoTime());
+		
+		// Closer to Pi1
+		String device2 = devices[1];
+		int signalDev2Pi1 = -75;
+		int signalDev2Pi2 = -85;
+		int signalDev2Pi3 = -85;
+		
+		ProbeRequest req4 = new ProbeRequest(device2,signalDev2Pi1, pis[0] ,frequency, System.nanoTime());
+		ProbeRequest req5 = new ProbeRequest(device2,signalDev2Pi2, pis[1] ,frequency, System.nanoTime());
+		ProbeRequest req6 = new ProbeRequest(device2,signalDev2Pi3, pis[2] ,frequency, System.nanoTime());
+
+		// Closer to Pi2
+		String device3 = devices[2];
+		int signalDev3Pi1 = -85;
+		int signalDev3Pi2 = -75;
+		int signalDev3Pi3 = -85;
+		
+		ProbeRequest req7 = new ProbeRequest(device3,signalDev3Pi1, pis[0] ,frequency, System.nanoTime());
+		ProbeRequest req8 = new ProbeRequest(device3,signalDev3Pi2, pis[1] ,frequency, System.nanoTime());
+		ProbeRequest req9 = new ProbeRequest(device3,signalDev3Pi3, pis[2] ,frequency, System.nanoTime());
+
+		putProbeReq(req1);
+		putProbeReq(req2);
+		putProbeReq(req3);
+		putProbeReq(req4);
+		putProbeReq(req5);
+		putProbeReq(req6);
+		putProbeReq(req7);
+		putProbeReq(req8);
+		putProbeReq(req9);
+		
+	}
 	
-	
-	@Test public void testSendSignals() throws UnknownHostException {
+	 public void testSendSignals() throws UnknownHostException {
 		
 		for (int i=0; i<devices.length; i++){
 			

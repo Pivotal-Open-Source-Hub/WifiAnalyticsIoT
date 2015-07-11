@@ -8,7 +8,7 @@ freqInMHz=payload.get("frequencyMhz").doubleValue()
  * FSPL(Db) = 20*log10(d)+ 20*log10(f) + 27.55
  */
 double exp = (27.55 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0
-distance = Math.pow(10.0, exp)
+distance = Math.pow(10.0, exp) 
 payload.put("distance",distance);
 
 return payload

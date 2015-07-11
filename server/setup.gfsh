@@ -2,9 +2,11 @@
 
 start locator --name=locator1 --J=-Dgemfire.http-service-port=7575 --bind-address=192.168.2.1 --mcast-port=0
 
+connect --locator=192.168.2.1[10334]
+
 configure pdx --read-serialized=true --auto-serializable-classes=io\.pivotal\.demo\..*
 
-start server --name=server1 --J=-Dgemfire.start-dev-rest-api=true --J=-Dgemfire.http-service-port=8080 --bind-address=192.168.2.1 --mcast-port=0
+start server --name=server1 --bind-address=192.168.2.1 --mcast-port=0
 
 create region --name=/Probe_requests --type=PARTITION
 create region --name=/Distances --type=PARTITION

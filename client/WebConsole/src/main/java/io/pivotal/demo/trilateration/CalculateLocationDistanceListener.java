@@ -4,16 +4,10 @@ import io.pivotal.demo.ui.DeviceDistance;
 import io.pivotal.demo.ui.DeviceLocation;
 import io.pivotal.demo.ui.GeodeClient;
 
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
-import java.util.function.ToIntFunction;
-import java.util.function.ToLongFunction;
 
 import com.gemstone.gemfire.cache.Declarable;
 import com.gemstone.gemfire.cache.EntryEvent;
@@ -23,6 +17,10 @@ import com.gemstone.gemfire.pdx.PdxInstance;
 public class CalculateLocationDistanceListener extends
 		CacheListenerAdapter implements Declarable {
 
+	
+	public CalculateLocationDistanceListener() {
+	}
+	
 	@Override
 	public void init(Properties arg0) {
 	}
@@ -61,7 +59,6 @@ public class CalculateLocationDistanceListener extends
 	private void handleUpdates(EntryEvent event){
 		
 		Object obj = event.getNewValue();
-		DeviceDistance updatedObj;
 		if (obj instanceof PdxInstance){
 			updateDeviceLocation((String)((PdxInstance)obj).getField("deviceId"));
 		}
@@ -72,6 +69,10 @@ public class CalculateLocationDistanceListener extends
 		
 	};
 	
+	
+	
+
+
 	public static void updateDeviceLocation(String deviceId) {
 		
 		

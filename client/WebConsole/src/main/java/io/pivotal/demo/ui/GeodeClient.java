@@ -1,5 +1,7 @@
 package io.pivotal.demo.ui;
 
+import io.pivotal.demo.trilateration.Scale;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,20 +50,6 @@ public class GeodeClient {
     	if (instance==null) instance = new GeodeClient();
     	return instance;
     }
-    
-    public Collection<DeviceDistance> getDeviceDistances(String deviceId){
-    	
-    	Query query = queryService.newQuery("select distinct * from /Distances d where d.deviceId=$1 order by d.piId");
-    	try {
-			Collection<DeviceDistance> distances = (Collection<DeviceDistance>)query.execute(new Object[]{deviceId});
-			return distances;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-    	
-    	
-    }
 
 	public Collection<DeviceLocation> getPIsLocation() {
     	Query query = queryService.newQuery("select distinct * from /RaspberryPIs r order by r.deviceId");
@@ -91,7 +79,7 @@ public class GeodeClient {
 	   		while (results.hasNext()){
 	   			Struct result = (Struct) results.next();
 	   			
-	   			double distance  = (Double)result.getFieldValues()[1];
+	   			double distance  = (Double)result.getFieldValues()[1] * 2;// * ((Scale.getX() + Scale.getY())/2);
 	   			String piId = (String)result.getFieldValues()[2];
 	   			double piX = (Double)result.getFieldValues()[3]; 
 	   			double piY = (Double)result.getFieldValues()[4];
@@ -136,6 +124,8 @@ public class GeodeClient {
 		}
 		
 	}
+
+	
 
 
 
