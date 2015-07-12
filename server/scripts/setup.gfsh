@@ -1,0 +1,16 @@
+# GemFire setup
+
+connect --locator=locator[10334]
+
+configure pdx --read-serialized=true --auto-serializable-classes=io\.pivotal\.demo\..*
+
+# Spark connector functions
+deploy --jar=/connector/gemfire-functions_2.10-0.5.0.jar
+
+create region --name=/Probe_requests --type=PARTITION
+create region --name=/Trilateration --type=PARTITION
+
+#import data --file=/data/TSLA.gfd --region=/Stocks --member=9db44883dad4
+
+describe region --name=/Probe_requests
+describe region --name=/Trilateration
