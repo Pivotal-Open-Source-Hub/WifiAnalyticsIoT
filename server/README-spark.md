@@ -1,5 +1,10 @@
 # Apache Geode Spark Connector
 
+### Requirements
+
+| Software | Version |
+|----------|---------|
+| Spark    | 1.3     |
 
 
 ## Building and Testing
@@ -98,13 +103,13 @@ gfsh>deploy --jar=<path to connector project>/gemfire-functions/target/scala-2.1
 ### Spark shell terminal
 In this terminal, setup Spark environment, and start Spark shell.
 
-Set GemFire locator property in Spark configuration: add 
+Set GemFire locator property in Spark configuration: add
 following to `<spark-dir>/conf/spark-defaults.conf`:
 ```
 spark.gemfire.locators=localhost[55221]
 ```
 Note:
- - if the file doesn't exist, create one. 
+ - if the file doesn't exist, create one.
  - replace string `localhost[55221]` with your own locator host and port.
 
 By default, Spark shell output lots of info log, if you want to
@@ -127,7 +132,7 @@ scala> sc.getConf.get("spark.gemfire.locators")
 res0: String = localhost[55221]
 ```
 
-In order to enable GemFire specific functions, you need to import 
+In order to enable GemFire specific functions, you need to import
 `io.pivotal.gemfire.spark.connector._`
 ```
 scala> import io.pivotal.gemfire.spark.connector._
@@ -167,8 +172,8 @@ key | value
 NEXT_STEP_NAME : END
 ```
 
-### Save Non-Pair RDD to GemFire 
-Saving non-pair RDD to GemFire requires an extra function that converts each 
+### Save Non-Pair RDD to GemFire
+Saving non-pair RDD to GemFire requires an extra function that converts each
 element of RDD to a key-value pair. Here's sample session in Spark shell:
 
 ```
@@ -204,7 +209,7 @@ NEXT_STEP_NAME : END
 ```
 
 ### Expose GemFire Region As RDD
-The same API is used to expose both replicated and partitioned region as RDDs. 
+The same API is used to expose both replicated and partitioned region as RDDs.
 
 ```
 scala> val rdd = sc.gemfireRegion[String, String]("str_str_region")
@@ -225,5 +230,4 @@ scala> rdd2.foreach(println)
 ```
 
 Note: use the right type of region key and value, otherwise you'll get
-ClassCastException. 
-
+ClassCastException.
