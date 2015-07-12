@@ -28,6 +28,31 @@ $ nohup ./network_reconnect.sh &
 $ ./startMonitor.sh
 ----
 
+### Test tshark (assumes the monitoring enabled network card is wlan1)
+
+----
+$ sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e wlan.sa -e radiotap.dbm_antsignal -e radiotap.channel.freq
+
+tshark: Lua: Error during loading:
+ [string "/usr/share/wireshark/init.lua"]:45: dofile has been disabled
+Running as user "root" and group "root". This could be dangerous.
+Capturing on wlan1mon
+6c:94:f8:8e:7e:1e	-45	2437
+6c:94:f8:8e:7e:1e	-45	2437
+10:41:7f:1a:97:d9	-71	2437
+74:da:38:56:01:5e	-19	2437
+74:da:38:56:01:5e	-15	2437
+74:da:38:56:01:5e	-9	2437
+74:da:38:56:01:5e	-17	2437
+74:da:38:56:01:5e	-17	2437
+74:da:38:56:01:5e	-19	2437
+74:da:38:56:01:5e	-15	2437
+74:da:38:56:01:5e	-19	2437
+^C
+----
+(leave it for a few minutes, enable and disable your cell wifi within a few meters range until you see some data being captured, but if you see __"Capturing on wlan1mon"__ it should be good) 
+
+
 ### Config client
 
 ----
@@ -45,8 +70,6 @@ TODO: change to generate Jar and run jar in background
 $ cd IoT-Analytics-Http
 $ ./gradlew run
 ----
-
-
 
 
 ### Start the client process
