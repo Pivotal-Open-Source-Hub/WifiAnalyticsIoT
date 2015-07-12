@@ -3,21 +3,23 @@
 
 ### Using Apache Zeppelin Docker
 
+Using the Dockerfile under zeppelin folder, you can build the Docker image as follows:  
 ```
-docker pull epahomov/docker-zeppelin
-```
-
-Log into the container in order to build zeppelin against the specific
-
-```
-docker run -i -t -p 8080:8080 -p 8081:8081 epahomov/docker-zeppelin /bin/bash
-cd incubator-zeppelin
-mvn clean package -Pspark-1.3 -Dhadoop.version=2.2.0 -Phadoop-2.2 -DskipTests
+docker build -t markito/zeppelin .
 ```
 
+This is step is **not required** since there is an image already built in DockerHub.  Just pull using the following command:
+
+```
+docker pull markito/zeppelin
+```
+
+This image was built for Spark 1.3 which is the recommended version for this lab.
 For more details: https://registry.hub.docker.com/u/epahomov/docker-zeppelin/
 
 ### Building Zeppelin
+
+If you are not using Docker and prefer to run the lab locally, here are the steps to build Zeppelin locally.
 
 ```
 git clone https://github.com/apache/incubator-zeppelin
