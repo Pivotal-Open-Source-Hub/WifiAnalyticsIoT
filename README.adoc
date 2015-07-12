@@ -30,6 +30,17 @@ $ cd /home/pi/WifiAnalyticsIoT/client
 $ nohup ./network_reconnect.sh &
 ----
 
+*NOTE:*  Testing a different solution... it seems adding __"wireless-power off"__ on the device listing at /etc/network/interfaces does the trick. Need to test longer term.
+Example config for wlan0:
+----
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+wireless-power off
+----
+
 ### Put the network in monitoring mode (assumes the monitoring enabled network card is wlan1)
 
 ----
