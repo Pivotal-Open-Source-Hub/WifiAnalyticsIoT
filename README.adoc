@@ -10,7 +10,7 @@ $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc2.tar.gz
 $ cd aircrack-ng-1.2-rc2/
 $ make
 $ sudo make install
-$ sudo apt-get -y install iw
+$ sudo apt-get -y install iw ethtool tshark
 ----
 
 
@@ -40,7 +40,7 @@ $ vi IoT-Analytics-Http/src/main/resources/application.properties
 
 ### Start the client
 
-TODO: change to generate JAr and run jar in background
+TODO: change to generate Jar and run jar in background
 ----
 $ cd IoT-Analytics-Http
 $ ./gradlew run
