@@ -1,0 +1,48 @@
+server:
+  image: markito/geode-docker-spark
+  mem_limit: 2g
+  links:
+   - locator:locator
+  expose:
+   - "9090:9090"
+   - "40404:40404"
+  ports:
+   - "40404:40404"
+   - "9090:9090"
+  volumes:
+   - scripts/:/scripts/
+  command: /scripts/startServer.sh --max-heap=1G --J=-Dgemfire.start-dev-rest-api=true --J=-Dgemfire.http-service-port=9090
+
+locator:
+  image: markito/geode-docker-spark
+  hostname: locator
+  mem_limit: 512m
+  expose:
+   - "10334:10334"
+   - "1099"
+   - "7575"
+  ports:
+   - "1099:1099"
+   - "10334:10334"
+   - "7575:7575"
+   - "7070:7070"
+  volumes:
+   - scripts/:/scripts/
+  command: /scripts/cmdWrapper.sh gfsh start locator --name=locator --mcast-port=0
+
+zeppelin:
+  image: markito/zeppelin
+  hostname: zeppelin
+  mem_limit: 2G
+  links:
+   - locator:locator
+   - server:server
+  ports:
+   - "8080:8080"
+   - "8081:8081"
+  expose:
+   - "8080:8080"
+   - "8181:8181"
+  volumes:
+   - connector/:/connector/
+  command: /incubator-zeppelin/bin/zeppelin.sh
