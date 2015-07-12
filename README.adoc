@@ -1,5 +1,12 @@
 # WAN-Analytics-IoT
 
+Tested on:
+- Raspberry-PI 2 Model B
+- OS Raspberrian __"uname -a"__:  __Linux raspberrypi 3.18.7-v7+ #755 SMP PREEMPT Thu Feb 12 17:20:48 GMT 2015 armv7l GNU/Linux__
+- Monitoring WLAN card chipset: Realtek RT5370
+
+** Note: the edimax dongle __does not__ work on monitoring mode
+
 ## Raspberry PI - Setup
 
 ----
