@@ -1,0 +1,11 @@
+connect --locator=192.168.2.1[10334]
+
+destroy region --name=/Probe_requests
+destroy region --name=/Distances
+destroy region --name=/DeviceLocations
+destroy region --name=/RaspberryPIs 
+
+create region --name=/Probe_requests --type=PARTITION
+create region --name=/Distances --type=PARTITION
+create region --name=/DeviceLocations --type=REPLICATE
+create region --name=/RaspberryPIs --type=REPLICATE
