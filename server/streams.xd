@@ -1,5 +1,5 @@
-admin config server http://192.168.2.1:9393
+admin config server http://172.20.14.47:9393
 
-stream create --name input --definition "http --port=9000 | gemfire-json-server --host=192.168.2.1 --port=10334 --useLocator=true --regionName=Probe_requests --keyExpression=payload.getField('nanoTimestamp')" --deploy
+stream create --name input --definition "http --port=9000 | gemfire-json-server --host=172.20.14.47 --port=10334 --useLocator=true --regionName=Probe_requests --keyExpression=payload.getField('nanoTimestamp')" --deploy
 
-stream create --name distances --definition "tap:stream:input.http > splitter --expression=#jsonPath(payload,'$') | transform --script='file:calculateDistances.groovy' |object-to-json |  gemfire-json-server --useLocator=true --host=192.168.2.1 --port=10334 --regionName=Distances --keyExpression=payload.getField('piId')+payload.getField('deviceId') " --deploy
+stream create --name distances --definition "tap:stream:input.http > splitter --expression=#jsonPath(payload,'$') | transform --script='file:calculateDistances.groovy' |object-to-json |  gemfire-json-server --useLocator=true --host=172.20.14.47 --port=10334 --regionName=Distances --keyExpression=payload.getField('piId')+payload.getField('deviceId') " --deploy

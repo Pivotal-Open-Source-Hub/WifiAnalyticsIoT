@@ -5,7 +5,7 @@
 
 <client-cache>
     <pool name="client" subscription-enabled="true">
-        <locator host="192.168.2.1" port="10334" />
+        <locator host="172.20.14.47" port="10334" />
     </pool>
     
    <pdx read-serialized="false">
