@@ -19,6 +19,12 @@ circle {
 	<body>
 	
 	<div id="body">
+	    <div id="header">
+	      Filter device: 
+  			<select id="selectedDeviceId">
+    			<option>Choose a device</option>
+  			</select>
+	    </div>
 		<svg id="map" width="1200" height="900"></svg>
 	    <div id="footer">
 	      Device Trilateration
@@ -226,9 +232,23 @@ var updateData = function() {
 	            return '<span> Device ID: ' + d.name + '</span>'; 
 	          }
 	        });
+	      
+
 		 
 		
 	});
+	
+    // populate drop-down
+    
+    for(var i = 0; i < dataNodes.length; i++) {
+  	    var opt = dataNodes[i].name;
+  	    var el = document.createElement("option");
+  	    el.textContent = opt;
+  	    el.value = opt;
+  	    select.appendChild(el);
+     }​;
+    
+	
     setTimeout(updateData, 1000);
     
 };

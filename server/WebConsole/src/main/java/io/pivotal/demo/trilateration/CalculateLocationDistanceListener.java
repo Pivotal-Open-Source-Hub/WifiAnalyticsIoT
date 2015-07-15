@@ -9,14 +9,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 import com.gemstone.gemfire.cache.Declarable;
 import com.gemstone.gemfire.cache.EntryEvent;
 import com.gemstone.gemfire.cache.util.CacheListenerAdapter;
 import com.gemstone.gemfire.pdx.PdxInstance;
+import com.pivotal.demo.particlefilter.ParticleFilter;
 
 public class CalculateLocationDistanceListener extends
 		CacheListenerAdapter implements Declarable {
 
+	
+    private static final boolean useParticleFilter = true;
+	
 	
 	public CalculateLocationDistanceListener() {
 	}
@@ -75,31 +83,37 @@ public class CalculateLocationDistanceListener extends
 
 	public static void updateDeviceLocation(String deviceId) {
 		
-		
-    	Map<DeviceDistance,DeviceLocation> devicesDistances = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
-    	if (devicesDistances==null || devicesDistances.size()==0) return;
-    	
-		Iterator<DeviceDistance> keys = devicesDistances.keySet().iterator();
-		double[][] positions = new double[devicesDistances.size()][devicesDistances.size()];
-		double[] distances = new double[devicesDistances.size()];
-		
-		int index=0;
-		while (keys.hasNext()){			
-			DeviceDistance distance = keys.next();
-			distances[index]=distance.getDistance();
-			DeviceLocation piLocation = devicesDistances.get(distance);
-			positions[index]=new double[]{piLocation.getX(), piLocation.getY()};
-			index++;
+		if (!useParticleFilter){
+			// Standard Trilateration
+	    	Map<DeviceDistance,DeviceLocation> devicesDistances = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
+	    	if (devicesDistances==null || devicesDistances.size()==0) return;
+	    	
+			Iterator<DeviceDistance> keys = devicesDistances.keySet().iterator();
+			double[][] positions = new double[devicesDistances.size()][devicesDistances.size()];
+			double[] distances = new double[devicesDistances.size()];
+			
+			int index=0;
+			while (keys.hasNext()){			
+				DeviceDistance distance = keys.next();
+				distances[index]=distance.getDistance();
+				DeviceLocation piLocation = devicesDistances.get(distance);
+				positions[index]=new double[]{piLocation.getX(), piLocation.getY()};
+				index++;
+			}
+			
+			double[] location = Trilateration.calculate(positions, distances);
+			DeviceLocation deviceLocation = new DeviceLocation();
+			deviceLocation.setDeviceId(deviceId);
+			deviceLocation.setX(location[0]);
+			deviceLocation.setY(location[1]);
 		}
-		
-		double[] location = Trilateration.calculate(positions, distances);
-		DeviceLocation deviceLocation = new DeviceLocation();
-		deviceLocation.setDeviceId(deviceId);
-		deviceLocation.setX(location[0]);
-		deviceLocation.setY(location[1]);
-		
-		GeodeClient.getInstance().updateDeviceLocation(deviceLocation);
-		
+		else{
+			// Particle Filter
+			Map<DeviceDistance,DeviceLocation> deviceDistancePerPI = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
+			ParticleFilter particleFilter = new ParticleFilter(deviceId, deviceDistancePerPI);
+	    	DeviceLocation deviceLocation = particleFilter.calculate();		
+			GeodeClient.getInstance().updateDeviceLocation(deviceLocation);
+		}
 	}
 
 	
