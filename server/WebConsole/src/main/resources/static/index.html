@@ -19,7 +19,7 @@ circle {
 	<body>
 	
 	<div id="body">
-	    <div id="header">
+	    <div id="combo">
 	      Filter device: 
   			<select id="selectedDeviceId">
     			<option>Choose a device</option>
@@ -39,6 +39,7 @@ circle {
 var dataNodes;
 var color;
 var pis;
+var selectedDevice;
 
 var root;
 
@@ -202,6 +203,29 @@ var updateData = function() {
 		
 		
 		dataNodes = nodes;
+
+		
+	    var combobox = d3.select("#selectedDeviceId");
+	      
+	    combobox
+	      	.on("change", function () { 
+	      		
+	      		selectedDevice = this.value; 
+	     		if (selectedDevice=='Choose a device'){
+	     			selectedDevice=null; 		
+	     		}
+	     });
+
+	      
+	    combobox
+	      	.selectAll()
+	      	.data(dataNodes, function(d) { return d.name; })
+	      	.enter()
+	      	.append('option')
+	      	.attr("value", function(d) { return d.name; })
+	      	.text(function(d) { return d.name; });
+	      	
+	      		
 		
 		var existingNodes = container.selectAll('circle');
 		
@@ -219,9 +243,15 @@ var updateData = function() {
 		  .attr("r", function(d) { return d.radius; })
 		  .attr("cx", function(d) { return d.x; })
 		  .attr("cy", function(d) { return d.y; })
-		  .style("fill", function(d, i) { return color(i % 3); })
+		  .style("fill", function(d, i) {
+			  return color(i % 3); 
+			})
 		  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
-		  .style('opacity', 1);
+		  .style('opacity', 1)
+		  .style("visibility", function(d) {
+			  if (selectedDevice==null || selectedDevice=='undefined') return 'visible';
+			  return selectedDevice==d.name? 'visible' : 'hidden';
+            });
 		
 	      $('svg circle').tipsy({ 
 	          gravity: 'w',
@@ -232,21 +262,10 @@ var updateData = function() {
 	            return '<span> Device ID: ' + d.name + '</span>'; 
 	          }
 	        });
-	      
-
-		 
 		
 	});
 	
-    // populate drop-down
-    
-    for(var i = 0; i < dataNodes.length; i++) {
-  	    var opt = dataNodes[i].name;
-  	    var el = document.createElement("option");
-  	    el.textContent = opt;
-  	    el.value = opt;
-  	    select.appendChild(el);
-     }​;
+
     
 	
     setTimeout(updateData, 1000);
