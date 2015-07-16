@@ -6,7 +6,6 @@ import io.pivotal.demo.trilateration.Scale;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
     
 	
-	private static final int distanceBetweenPIs = 3;
-	private static final int scaleX = 300; // 900 pixels / 3m
-	private static final int scaleY = 300; // 900 pixels / 3m
+	//private static final int distanceBetweenPIs = 3;
+	//private static final int scaleX = 300; // 900 pixels / 3m
+	//private static final int scaleY = 300; // 900 pixels / 3m
 	
 	
     public Controller() {
@@ -37,7 +36,7 @@ public class Controller {
     	Iterator<DeviceLocation> it = deviceLocations.iterator();
     	while (it.hasNext()){
     		DeviceLocation device = it.next();
-    		map.addDevice(device.getDeviceId(), device.getX() * scaleX, device.getY() * scaleY);
+    		map.addDevice(device.getDeviceId(), device.getX(), device.getY());
     	}
     	
         return map;
@@ -53,7 +52,7 @@ public class Controller {
     	Iterator<DeviceLocation> it = piLocations.iterator();
     	while (it.hasNext()){
     		DeviceLocation pi = it.next();
-    		map.addDevice(pi.getDeviceId(), pi.getX() * scaleX, pi.getY() * scaleY);
+    		map.addDevice(pi.getDeviceId(), pi.getX(), pi.getY());
     	}
     	
         return map;
@@ -62,7 +61,7 @@ public class Controller {
     @RequestMapping(value="/updatePILocation")
     public void updatePILocation(@RequestParam("deviceId") String deviceId, @RequestParam("x") double x, @RequestParam("y") double y){
     	
-    	DeviceLocation piLocation = new DeviceLocation(deviceId, x / scaleX, y / scaleY);
+    	DeviceLocation piLocation = new DeviceLocation(deviceId, x, y);
     	GeodeClient.getInstance().setPILocation(piLocation);
     	Scale.updateScale();
     	recalculateAllPositions();
