@@ -1,6 +1,6 @@
 # WAN-Analytics-IoT
 
-For instructions on the setup of the devices, please see link:/README-raspberrypi[README-raspberrypi.adoc]
+For instructions on the setup of the devices, please see link:/README-raspberrypi.adoc[README - Raspberry PI]
 
 
 ### Setup Geode
