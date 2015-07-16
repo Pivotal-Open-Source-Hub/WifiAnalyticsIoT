@@ -1,100 +1,75 @@
 # WAN-Analytics-IoT
 
-Tested on:
+For instructions on the setup of the devices, please see link:/README-raspberrypi[README-raspberrypi.adoc]
 
-- Raspberry-PI 2 Model B
-- OS Raspberrian __"uname -a"__:  __Linux raspberrypi 3.18.7-v7+ #755 SMP PREEMPT Thu Feb 12 17:20:48 GMT 2015 armv7l GNU/Linux__
-- Monitoring WLAN card chipset: Realtek RT5370
 
-** Note: the edimax dongle __does not__ work on monitoring mode
-
-## Raspberry PI - Setup
+### Setup Geode
 
 ----
-$ sudo apt-get update
-$ sudo apt-get -y upgrade
-$ sudo apt-get -y install libssl-dev libnl-dev
-$ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc2.tar.gz
-$ cd aircrack-ng-1.2-rc2/
-$ make
-$ sudo make install
-$ sudo apt-get -y install iw ethtool tshark
+$ cd server
+$ gfsh
+
+gfsh>  start locator --name=locator1 --mcast-port=0 --bind-address=<ADDRESS>
+gfsh> start server --name=server1 --mcast-port=0 --bind-address=<ADDRESS>
+gfsh> create region --name=/Probe_requests --type=PARTITION
+gfsh> create region --name=/Distances --type=REPLICATE
+gfsh> create region --name=/DeviceLocations --type=REPLICATE
+gfsh> create region --name=/RaspberryPIs --type=REPLICATE
 ----
 
+### Setup Spring XD
 
-
-### Avoid random network disconnections 
-
+- Start Spring XD server
 ----
-$ cd /home/pi/WifiAnalyticsIoT/client
-$ nohup ./network_reconnect.sh &
-----
-
-*NOTE:*  Testing a different solution... it seems adding __"wireless-power off"__ on the device listing at /etc/network/interfaces does the trick. Need to test longer term.
-Example config for wlan0:
-----
-auto wlan0
-allow-hotplug wlan0
-iface wlan0 inet manual
-wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
-iface default inet dhcp
-wireless-power off
+$ xd-singlenode
+(...)
 ----
 
-### Put the network in monitoring mode (assumes the monitoring enabled network card is wlan1)
+- Modify the file server/streams.xd to connect to the right XD server as creating the stream.
+- Create the stream:
 
 ----
-$ ./startMonitor.sh
+$ xd-shell --cmdfile streams.xd
+Jul 15, 2015 11:12:56 PM org.springframework.shell.core.AbstractShell handleExecutionResult
+INFO: Successfully targeted http://172.20.14.47:9393
+Jul 15, 2015 11:13:07 PM org.springframework.shell.core.AbstractShell handleExecutionResult
+INFO: Created and deployed new stream 'input'
 ----
 
-### Test tshark (assumes the monitoring enabled network card is wlan1)
+### Start the GUI
+
+- Modify the file __server/WebConsole/src/main/resources/client.xml__ to connect to the right Gem locator host
+- Startup the client:
 
 ----
-$ sudo tshark -i wlan1mon -I -l -f broadcast -R wlan.fc.subtype==4 -T fields -e wlan.sa -e radiotap.dbm_antsignal -e radiotap.channel.freq
-
-tshark: Lua: Error during loading:
- [string "/usr/share/wireshark/init.lua"]:45: dofile has been disabled
-Running as user "root" and group "root". This could be dangerous.
-Capturing on wlan1mon
-6c:94:f8:8e:7e:1e	-45	2437
-6c:94:f8:8e:7e:1e	-45	2437
-10:41:7f:1a:97:d9	-71	2437
-74:da:38:56:01:5e	-19	2437
-74:da:38:56:01:5e	-15	2437
-74:da:38:56:01:5e	-9	2437
-74:da:38:56:01:5e	-17	2437
-74:da:38:56:01:5e	-17	2437
-74:da:38:56:01:5e	-19	2437
-74:da:38:56:01:5e	-15	2437
-74:da:38:56:01:5e	-19	2437
-^C
-----
-(leave it for a few minutes, enable and disable your cell wifi within a few meters range until you see some data being captured, but if you see __"Capturing on wlan1mon"__ it should be good) 
-
-
-### Config client
-
-----
-$ vi IoT-Analytics-Http/src/main/resources/application.properties
-----
-
-* Change the __serverUrl__ property with the Spring XD HTTP deployed stream location
-* Select the right __tshark_process__ variable, depending on your environment
-* Save file
-
-### Start the client
-
-TODO: change to generate Jar and run jar in background
-----
-$ cd IoT-Analytics-Http
+$ cd server/WebConsole
 $ ./gradlew run
 ----
 
+- Open the browser at __http://<server>:8080/
 
-### Start the client process
+
+### Start clients 
+
+For each Raspberry PI:
+
+- SSH to the Raspberry PIs
 
 ----
-./startClient.sh
+$ ssh pi@<PI_HOST>
+PI $ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
 ----
+
+- Modify the file __client/IoT-Analytics-Http/src/main/resources/application.properties__ to connect to the right Spring XD server and to use the correct tshark command syntax.
+
+- Start the client:
+
+----
+$ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
+$ ./gradlew run
+----
+ 
+- Do the above steps for each least 3 Raspberry PIs 
+- Refresh the browser at http://<server>:8080/
 
 
