@@ -37,7 +37,20 @@ import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer.Optim
 			 }
 		 }
 					
-																					
+		/* 
+		 public static void main (String[] args){
+			 
+			 System.out.println("Expected distance for 21 dbm:" + calculateDistanceInMeters(21, 2412));
+			 System.out.println("Expected distance for 23 dbm:" + calculateDistanceInMeters(23, 2412));
+			 System.out.println("Expected distance for 31 dbm:" + calculateDistanceInMeters(31, 2412));
+			 System.out.println("Expected distance for 35 dbm:" + calculateDistanceInMeters(35, 2412));
+			 System.out.println("Expected distance for 37 dbm:" + calculateDistanceInMeters(37, 2412));
+			 System.out.println("Expected distance for 41 dbm:" + calculateDistanceInMeters(41, 2412));
+			 System.out.println("Expected distance for 43 dbm:" + calculateDistanceInMeters(43, 2412));
+			 System.out.println("Expected distance for 51 dbm:" + calculateDistanceInMeters(51, 2412));
+			 System.out.println("Expected distance for 61 dbm:" + calculateDistanceInMeters(61, 2412));
+		 }
+			*/																		
 	}
 	
 	

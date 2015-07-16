@@ -18,6 +18,14 @@
      		</parameter>
 		</pdx-serializer>
     </pdx>
+
+    <region name="Probe_requests">
+        <region-attributes refid="PROXY">
+            <cache-listener>
+                <class-name>io.pivotal.demo.trilateration.AvgDistanceProbeReqListener</class-name>
+            </cache-listener>
+        </region-attributes>
+    </region>
     
     <region name="Distances">
         <region-attributes refid="PROXY">

@@ -1,11 +1,8 @@
 package io.pivotal.demo.ui;
 
-import io.pivotal.demo.trilateration.Scale;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.gemstone.gemfire.cache.Region;
@@ -14,7 +11,7 @@ import com.gemstone.gemfire.cache.client.ClientCacheFactory;
 import com.gemstone.gemfire.cache.query.Query;
 import com.gemstone.gemfire.cache.query.QueryService;
 import com.gemstone.gemfire.cache.query.Struct;
-import com.gemstone.gemfire.cache.query.internal.StructImpl;
+import com.gemstone.gemfire.pdx.PdxInstance;
 
 public class GeodeClient {
 
@@ -43,6 +40,7 @@ public class GeodeClient {
         distances.registerInterest("ALL_KEYS");
         pis = cache.getRegion(PIsRegionName);
         locations = cache.getRegion(locationsRegionName);
+        cache.getRegion("Probe_requests").registerInterest("ALL_KEYS");
     }
     
     
@@ -125,7 +123,32 @@ public class GeodeClient {
 		
 	}
 
+	public double[] getLatestDistanceMeasurements(String piId, String deviceId, int numberOfResults){
 	
+	   	Query query = queryService.newQuery("select distinct * from /Probe_requests p where p.piId=$1 and p.deviceId=$2 order by p.nanoTimestamp desc limit "+numberOfResults);
+	   	try {
+	   		Collection results = (Collection)query.execute(new Object[]{piId, deviceId});
+	   		double[] distances = new double[results.size()];
+	   		
+	   		Iterator resultsIt = results.iterator();
+	   		
+	   		int i=0;
+	   		while (resultsIt.hasNext()){
+	   			PdxInstance result = (PdxInstance) resultsIt.next();	   			
+	   			double distance  = (double)result.getField("distance");
+	   			distances[i] = distance;
+	   			i++;
+	   		}
+	   		return distances;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		
+		
+		
+	}
 
 
 
