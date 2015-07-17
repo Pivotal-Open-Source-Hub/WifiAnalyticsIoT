@@ -1,0 +1,48 @@
+# WAN-Analytics-IoT
+
+## Lattice - Setup
+
+----
+$ mkdir /tmp
+----
+
+### Geode Locator
+
+----
+$ ltc create locator markito/geode-docker-spark --run-as-root -m "0" --working-dir=/tmp --monitor-port=10334 -p 10334,1099  -- gfsh start locator --name=loc1  --mcast-port=0 --J=-Djmx-manager-start=false
+----
+
+Verify the port mapping for 10334:
+
+----
+$ ltc status locator 
+----
+
+### Geode Server
+
+----
+$ ltc create server markito/geode-docker-spark --run-as-root -m "0" --working-dir=/tmp --monitor-port=40404 -p 40404 -- gfsh start server --name=server1  --locators=192.168.11.11[PORT]
+----
+
+Check if cluster is running
+
+----
+$ltc create gfsh markito/geode-docker-spark  --no-monitor -- gfsh -e "connect --locator=192.168.11.11[PORT]" -e "list members"
+(...)
+
+$ltc logs gfsh
+
+07/17 08:20:32.12 [APP|0] (1) Executing - connect --locator=192.168.11.11[61038]
+07/17 08:20:32.16 [APP|0] Connecting to Locator at [host=192.168.11.11, port=61038] ..
+07/17 08:20:32.66 [APP|0] Connecting to Manager at [host=10.254.0.1, port=1099] ..
+07/17 08:20:32.83 [APP|0] Successfully connected to: [host=10.254.0.1, port=1099]
+07/17 08:20:32.84 [APP|0] (2) Executing - list members
+07/17 08:20:32.88 [APP|0]  Name   | Id
+07/17 08:20:32.89 [APP|0] ------- | --------------------------------------
+07/17 08:20:32.89 [APP|0] server1 | 10.254.0.5(server1:43)<v1>:43803
+07/17 08:20:32.89 [APP|0] loc1    | sd2prfknjf3(loc1:42:locator)<v0>:59255
+07/17 08:20:33.00 [APP|0] Exit status 0
+
+----
+
+
