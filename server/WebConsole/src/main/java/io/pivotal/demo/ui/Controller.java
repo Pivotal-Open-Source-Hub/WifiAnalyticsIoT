@@ -63,9 +63,21 @@ public class Controller {
     	
     	DeviceLocation piLocation = new DeviceLocation(deviceId, x, y);
     	GeodeClient.getInstance().setPILocation(piLocation);
-    	Scale.updateScale();
     	recalculateAllPositions();
     }   
+    
+    @RequestMapping(value="/updateDimensions")
+    public void updateDimensions(@RequestParam("xPx") double xPixels, @RequestParam("yPx") double yPixels, 
+    							@RequestParam("xMeters") double xMeters, @RequestParam("yMeters") double yMeters){
+    	
+    	Scale.getInstance().setDimensions(xPixels, yPixels, xMeters, yMeters);
+    	recalculateAllPositions();
+    	
+    }      
+    
+    
+    
+    
     
     private void recalculateAllPositions(){
     	
@@ -76,6 +88,9 @@ public class Controller {
     	}
     	
     }
+    
+    
+    
     
     
 }

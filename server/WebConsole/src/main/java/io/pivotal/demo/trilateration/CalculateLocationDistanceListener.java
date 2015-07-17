@@ -4,14 +4,10 @@ import io.pivotal.demo.ui.DeviceDistance;
 import io.pivotal.demo.ui.DeviceLocation;
 import io.pivotal.demo.ui.GeodeClient;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import com.gemstone.gemfire.cache.Declarable;
 import com.gemstone.gemfire.cache.EntryEvent;
@@ -85,7 +81,7 @@ public class CalculateLocationDistanceListener extends
 		
 		if (!useParticleFilter){
 			// Standard Trilateration
-	    	Map<DeviceDistance,DeviceLocation> devicesDistances = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
+	    	Map<DeviceDistance,DeviceLocation> devicesDistances = getScaledDeviceDistancePerPI(deviceId);
 	    	if (devicesDistances==null || devicesDistances.size()==0) return;
 	    	
 			Iterator<DeviceDistance> keys = devicesDistances.keySet().iterator();
@@ -109,15 +105,26 @@ public class CalculateLocationDistanceListener extends
 		}
 		else{
 			// Particle Filter
-			Map<DeviceDistance,DeviceLocation> deviceDistancePerPI = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
+			Map<DeviceDistance,DeviceLocation> deviceDistancePerPI = getScaledDeviceDistancePerPI(deviceId);
 			ParticleFilter particleFilter = new ParticleFilter(deviceId, deviceDistancePerPI);
 	    	DeviceLocation deviceLocation = particleFilter.calculate();		
 			GeodeClient.getInstance().updateDeviceLocation(deviceLocation);
 		}
 	}
 
+	public static Map<DeviceDistance,DeviceLocation> getScaledDeviceDistancePerPI(String deviceId){
 	
-	
-	
+		Map<DeviceDistance,DeviceLocation> deviceDistancePerPI = GeodeClient.getInstance().getDeviceDistancePerPI(deviceId);
+		
+		Iterator<DeviceDistance> distancesIt = deviceDistancePerPI.keySet().iterator();
+		while (distancesIt.hasNext()){
+			
+			DeviceDistance distance = distancesIt.next();
+			distance.setDistance(distance.getDistance() * Scale.getInstance().getScaleFactor());
+			
+		}
+		return deviceDistancePerPI;
+		
+	}
 	
 }

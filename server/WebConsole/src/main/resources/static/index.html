@@ -16,14 +16,22 @@ circle {
 
     </style>		
 	</head>
-	<body>
+	<body onload="updateDimensions()">
 	
-	<div id="body">
+	<div id="body" >
 	    <div id="combo">
 	      Filter device: 
   			<select id="selectedDeviceId">
     			<option>Choose a device</option>
   			</select>
+  			<br><br>
+  			<!-- 
+	    </div>
+	    <div id="scale"> -->
+	      Room scale(m): <br>
+  		  &nbsp;&nbsp;Width:  <input type="text" name="width" id="widthX" size="2"><br>
+  		  &nbsp;&nbsp;Height: <input type="text" name="width" id="heightY" size="2"><br>
+  			<button type="button" onclick="updateDimensions()">Update</button>
 	    </div>
 		<svg id="map" width="1200" height="900"></svg>
 	    <div id="footer">
@@ -104,6 +112,24 @@ d3.json( "controller/getPIs", function(data) {
 
 //Create the zoom behavior to set for the draw
 zoom = d3.behavior.zoom().scaleExtent([MAX_ZOOM_OUT, MAX_ZOOM_IN]).on('zoom', zoomed);
+
+
+function updateDimensions() {
+	
+	var xPx = d3.select("#map").attr('width');
+	var yPx = d3.select("#map").attr('height');
+	
+	var xMeters = d3.select("#widthX").property("value"); 
+	var yMeters = d3.select("#heightY").property("value");
+	
+	if (xMeters!='' && yMeters!='')
+		d3.json( "controller/updateDimensions?xPx="+xPx+"&yPx="+yPx+"&xMeters="+xMeters+"&yMeters="+yMeters, function(data) {	
+		});
+	
+	
+}
+
+
 
 //Function called on the zoom event. It translate the draw on the zoommed point and scale with a certain factor
 function zoomed() {

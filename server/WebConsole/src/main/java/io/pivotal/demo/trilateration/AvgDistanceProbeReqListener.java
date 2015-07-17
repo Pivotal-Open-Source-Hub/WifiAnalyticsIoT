@@ -1,9 +1,9 @@
 package io.pivotal.demo.trilateration;
 
-import java.util.Properties;
-
 import io.pivotal.demo.ui.DeviceDistance;
 import io.pivotal.demo.ui.GeodeClient;
+
+import java.util.Properties;
 
 import com.gemstone.gemfire.cache.Declarable;
 import com.gemstone.gemfire.cache.EntryEvent;
@@ -32,15 +32,17 @@ public class AvgDistanceProbeReqListener extends CacheListenerAdapter implements
 		Object obj = e.getNewValue();
 		String piId = null;
 		String deviceId = null;
+		double distance = 0;
 		if (obj instanceof PdxInstance){			
 			piId = (String)((PdxInstance)obj).getField("piId");
 			deviceId = (String)((PdxInstance)obj).getField("deviceId");
+			distance = (double)((PdxInstance)obj).getField("distance");
 		}
 		else throw new RuntimeException("new object is not PDX Instance.. it came as "+obj.getClass());
 		
 		double[] distances = GeodeClient.getInstance().getLatestDistanceMeasurements(piId, deviceId, NUMBER_OF_AVG_PERIODS);
 		
-		double sumOfDistances = 0;
+		double sumOfDistances = distance;
 		for (int i=0; i<distances.length; i++){
 			sumOfDistances += distances[i];
 		}

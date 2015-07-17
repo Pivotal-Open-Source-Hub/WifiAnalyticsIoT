@@ -38,6 +38,41 @@ public class DeviceDistance {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
+
+
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((deviceId == null) ? 0 : deviceId.hashCode());
+		result = prime * result + ((piId == null) ? 0 : piId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DeviceDistance other = (DeviceDistance) obj;
+		if (deviceId == null) {
+			if (other.deviceId != null)
+				return false;
+		} else if (!deviceId.equals(other.deviceId))
+			return false;
+		if (piId == null) {
+			if (other.piId != null)
+				return false;
+		} else if (!piId.equals(other.piId))
+			return false;
+		return true;
+	}
 	
 	
 	

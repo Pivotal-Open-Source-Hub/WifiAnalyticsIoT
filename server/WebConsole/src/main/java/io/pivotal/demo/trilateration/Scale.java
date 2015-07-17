@@ -1,51 +1,80 @@
 package io.pivotal.demo.trilateration;
 
-import io.pivotal.demo.ui.DeviceLocation;
-import io.pivotal.demo.ui.GeodeClient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Scale {
 
-	private static double scaleX=1;
-	private static double scaleY=1;
+	private double maxX=800;
+	private double maxY=800;
+	
+	private double scaledXinMeters=3;
+	private double scaledYinMeters=3;
 	
 	
+	private static Scale instance = null;
 	
-	public static void updateScale(){
+	
+	public static synchronized Scale getInstance(){
+		if (instance==null) instance = new Scale();
+		return instance;
+	}
+	
+	
+	public double getScaleFactor(){
 		
-		List<DeviceLocation> pis = new ArrayList(GeodeClient.getInstance().getPIsLocation());
+		return Math.sqrt(((maxX / scaledXinMeters) * (maxY / scaledYinMeters))) ;
 		
-		double sX=0, sY=0;
-		for (int i=0; i<pis.size()-1; i++){
-			
-			for (int j=i+1; j<pis.size(); j++){
-				double distanceX = Math.abs(pis.get(i).getX() - pis.get(j).getX());
-				double distanceY = Math.abs(pis.get(i).getY() - pis.get(j).getY());
-				
-				if(distanceX > sX) sX = distanceX / 100 ;
-				if(distanceY > sY) sY = distanceY / 100 ;
-				
-			}
-		}
-		scaleX = sX;
-		scaleY = sY;
-		/*
-		System.out.println("ScaleX = "+scaleX);
-		System.out.println("ScaleY = "+scaleY);
-		System.out.println("Scale = "+ ((Scale.getX() + Scale.getY())/2) );
-		*/
-		 
-						
+		
+	}
+
+	public void setDimensions(double maxX, double maxY, double metersX, double metersY){
+		this.setMaxX(maxX);
+		this.setMaxY(maxY);
+		this.setScaledXinMeters(metersX);
+		this.setScaledYinMeters(metersY);
 	}
 	
-	public static double getX(){
-		return scaleX;
+	public double getMaxX() {
+		return maxX;
 	}
+
+
+	public void setMaxX(double maxX) {
+		this.maxX = maxX;
+	}
+
+
+	public double getMaxY() {
+		return maxY;
+	}
+
+
+	public void setMaxY(double maxY) {
+		this.maxY = maxY;
+	}
+
+
+	public double getScaledXinMeters() {
+		return scaledXinMeters;
+	}
+
+
+	public void setScaledXinMeters(double scaledXinMeters) {
+		this.scaledXinMeters = scaledXinMeters;
+	}
+
+
+	public double getScaledYinMeters() {
+		return scaledYinMeters;
+	}
+
+
+	public void setScaledYinMeters(double scaledYinMeters) {
+		this.scaledYinMeters = scaledYinMeters;
+	}
+
 	
-	public static double getY(){
-		return scaleY;
-	}
+
+
+	
 
 }
