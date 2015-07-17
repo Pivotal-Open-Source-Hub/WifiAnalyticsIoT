@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 task fatJar(type: Jar) {
 	manifest {
 		attributes 'Implementation-Title': 'IoT Example',
-			'Implementation-Version': version,
+			'Implementation-Version': '0.1',
 			'Main-Class': 'io.pivotal.demo.IoTAnalyticsApplication'
 	}
 	baseName = project.name + '-all'
