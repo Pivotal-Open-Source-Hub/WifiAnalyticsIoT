@@ -59,7 +59,6 @@ dependencies {
 		exclude module : 'spring-boot-starter-logging'
 	}
 
-//	compile "com.gemstone.gemfire:gemfire:8.1.0"
 
 }
 

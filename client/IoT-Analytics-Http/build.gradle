@@ -11,14 +11,18 @@ apply plugin: 'spring-boot'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-/*
-jar {
-    baseName = 'IoT-Analytics'
-    version = '0.0.1-SNAPSHOT'
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'Implementation-Title': 'IoT Example',
+			'Implementation-Version': version,
+			'Main-Class': 'io.pivotal.demo.IoTAnalyticsApplication'
+	}
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-*/
+ 
+
 
 repositories {
     mavenCentral()    
