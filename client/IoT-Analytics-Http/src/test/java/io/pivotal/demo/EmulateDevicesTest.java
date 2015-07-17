@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 public class EmulateDevicesTest {
 
 	
-    private String URL = "http://localhost:9000";
+  private String URL = "http://localhost:9000";
 	
 	String[] devices = { 
 							"ce:57:41:f0:97:5d",

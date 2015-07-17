@@ -10,11 +10,11 @@ import org.springframework.web.client.RestTemplate;
 
 public class CreatePIsTest {
 
-	
-	@Test
+
+	//@Test
 	public void testCreation(){
-		
-		
+
+
 		DeviceLocation pi1 = new DeviceLocation("Pi-1", 0,0);
 		DeviceLocation pi2 = new DeviceLocation("Pi-2", 600,0);
 		DeviceLocation pi3 = new DeviceLocation("Pi-3", 300,500);

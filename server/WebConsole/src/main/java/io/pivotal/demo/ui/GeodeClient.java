@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.gemstone.gemfire.cache.Region;
 import com.gemstone.gemfire.cache.client.ClientCache;
@@ -23,18 +24,27 @@ public class GeodeClient {
     private static String locationsRegionName = "DeviceLocations";
     
     private static GeodeClient instance;
-    
+
+		private static String locatorHost = System.getProperty("locatorHost", "localhost");
+		private static int locatorPort = Integer.getInteger("locatorPort", 10334);
+
     Region distances;
     Region pis;
     Region locations;
 
-    private GeodeClient() {    	
-    	
+	  static Logger logger = Logger.getLogger(GeodeClient.class.getCanonicalName());
+
+    private GeodeClient() {
+				logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
+
         cache = new ClientCacheFactory()
-    		.set("name", "GemFireClient")
-    		.set("cache-xml-file", "client.xml")
-    		.create();
-    	
+								.addPoolLocator(locatorHost, locatorPort)
+								.setPoolSubscriptionEnabled(true)
+								.set("name", "GeodeClient")
+								.set("cache-xml-file", "client.xml")
+								.set("mcast-port", "0")
+								.create();
+
         queryService = cache.getQueryService();
         distances = cache.getRegion(distancesRegionName);
         distances.registerInterest("ALL_KEYS");
@@ -92,9 +102,7 @@ public class GeodeClient {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
-		
-		
+
 	}
 	
 	public void setDeviceDistance(DeviceDistance distance){

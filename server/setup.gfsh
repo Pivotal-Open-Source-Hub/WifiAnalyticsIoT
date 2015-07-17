@@ -13,6 +13,13 @@ create region --name=/Distances --type=PARTITION
 create region --name=/DeviceLocations --type=REPLICATE
 create region --name=/RaspberryPIs --type=REPLICATE
 
+## import data
+#import data --file=/Users/wmarkito/Pivotal/ASF/samples/WifiAnalyticsIoT/server/Distances.gfd --region=/Distances --member=server1
+#import data --file=/Users/wmarkito/Pivotal/ASF/samples/WifiAnalyticsIoT/server/DeviceLocations.gfd --region=/DeviceLocations --member=server1
+#import data --file=/Users/wmarkito/Pivotal/ASF/samples/WifiAnalyticsIoT/server/RaspberryPIs.gfd --region=/RaspberryPIs --member=server1
+#import data --file=/Users/wmarkito/Pivotal/ASF/samples/WifiAnalyticsIoT/server/Probe_requests.gfd --region=/Probe_requests --member=server1
+##
+
 describe region --name=/Probe_requests
 describe region --name=/Distances
 describe region --name=/DeviceLocations

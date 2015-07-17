@@ -10,8 +10,8 @@ import org.junit.Test;
 
 public class ParticleFIlterTest {
 
-	
-	@Test
+
+	//@Test
 	public void testParticleFilter(){
 
 		// Obtain a deviceId
