@@ -15,7 +15,7 @@ $ ltc create locator markito/geode-docker-spark --run-as-root -m "0" --working-d
 Verify the port mapping for 10334:
 
 ----
-$ ltc status locator 
+$ ltc status locator
 ----
 
 ### Geode Server
@@ -44,5 +44,37 @@ $ltc logs gfsh
 07/17 08:20:33.00 [APP|0] Exit status 0
 
 ----
+### Running GFSH in the locator container
 
+Find the locator information
 
+----
+  $ curl http://receptor.192.168.11.11.xip.io/v1/actual_lrps/locator
+  {"process_guid":"locator","instance_guid":"bb35c005-58f0-4fdc-4d7b-9436ee3fd4c0","cell_id":"cell-01","domain":"lattice","index":0,"address":"192.168.11.11","ports":[{"container_port":10334,"host_port":61001},{"container_port":1099,"host_port":61002}],"state":"RUNNING","crash_count":0,"since":1437157421384273056,"evacuating":false,"modification_tag":{"epoch":"3e694cf2-a051-4613-4fd4-32508a8e3848","index":2}}]
+----
+From the *lattice* installation directory, access the vagrant ssh
+
+----
+  $ vagrant ssh
+  Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.16.0-30-generic x86_64)
+   * Documentation:  https://help.ubuntu.com/
+  Last login: Fri Jun 19 13:56:21 2015 from 10.0.2.2
+  vagrant@ubuntu-trusty-64:~$
+----
+Now move to the *garden depot* directory and find your container instance.
+----
+# cd /var/lattice/garden/depot/
+root@ubuntu-trusty-64:/var/lattice/garden/depot# ls
+seelq57ubic  seelq57ubid    -- these are the containers for e.g.
+# cd seelq57ubic
+# bin/wsh
+[root@seelq57ubic ~]#
+----
+You still need to set JAVA_HOME and the PATH before accessing GFSH.
+----
+[root@seelq57ubic ~]# export JAVA_HOME=/jdk1.8.0_45/
+[root@seelq57ubic ~]# export GEODE_HOME=/incubator-geode/gemfire-assembly/build/install/apache-geode/
+[root@seelq57ubic ~]# export PATH=$PATH:$JAVA_HOME/bin:$GEODE_HOME/bin
+----
+
+Now you can access gfsh by just typing `gfsh`
