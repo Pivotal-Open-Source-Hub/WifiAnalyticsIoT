@@ -73,3 +73,35 @@ $ ./gradlew run
 - Refresh the browser at http://<server>:8080/
 
 
+# VM Configuation (Ubuntu based)
+
+----
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get -y update && sudo apt-get -y install oracle-java8-installer git wget python vagrant npm virtualbox
+
+# maven - zeppelin needs maven 3.1+
+wget http://apache.mirrors.timporter.net/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz
+sudo mkdir -p /usr/local/apache-maven
+sudo mv apache-maven-3.1.1-bin.tar.gz /usr/local/apache-maven
+cd /usr/local/apache-maven
+sudo tar -xzvf apache-maven-3.1.1-bin.tar.gz
+
+# geode
+git clone https://github.com/apache/incubator-geode
+cd incubator-geode && ./gradlew clean build -Dskip.tests=true
+
+# zeppelin
+git clone https://github.com/apache/incubator-zeppelin
+cd incubator-zeppelin && mvn clean package -Pspark-1.3 -Dhadoop.version=2.2.0 -Phadoop-2.2 -DskipTests
+
+# lattice
+git clone https://github.com/cloudfoundry-incubator/lattice.git
+cd lattice
+git checkout v0.2.6
+vagrant up --provider virtualbox
+
+# project
+git clone https://github.com/Pivotal-Open-Source-Hub/WifiAnalyticsIoT
+cd WifiAnalyticsIoT/server/WebConsole && ./gradlew build
+cd WifiAnalyticsIoT/client/IoT-Analytics-Http && ./gradlew build
+----
