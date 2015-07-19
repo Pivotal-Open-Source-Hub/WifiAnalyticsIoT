@@ -1,6 +1,6 @@
 package io.pivotal.demo;
 
-import io.pivotal.demo.devicesimulator.DeviceSimulator;
+import io.pivotal.demo.simulator.DeviceSimulator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

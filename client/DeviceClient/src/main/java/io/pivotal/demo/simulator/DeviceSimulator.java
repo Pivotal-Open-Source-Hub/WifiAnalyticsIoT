@@ -1,4 +1,4 @@
-package io.pivotal.demo.devicesimulator;
+package io.pivotal.demo.simulator;
 
 import io.pivotal.demo.ProbeRequest;
 
