@@ -25,7 +25,11 @@ public class DeviceSimulator implements CommandLineRunner {
     @Value("${delayInMs}")
 	private long delay;
 
-	private RestTemplate restTemplate = new RestTemplate();
+    @Value("${maxNumberOfSamples}")
+	private int maxNumberOfSamples;
+
+    
+    private RestTemplate restTemplate = new RestTemplate();
 	
 	Logger logger = Logger.getLogger(DeviceSimulator.class.getName());
 
@@ -38,7 +42,7 @@ public class DeviceSimulator implements CommandLineRunner {
 		logger.info(">>> Endpoint URL: "+URL);
 		logger.info("--------------------------------------");
 		
-		List objects = restTemplate.getForObject(geodeURL+"/gemfire-api/v1/queries/adhoc?q=SELECT%20DISTINCT%20*%20FROM%20/Device_simulation%20s%20ORDER%20BY%20nanoTimestamp", List.class);
+		List objects = restTemplate.getForObject(geodeURL+"/gemfire-api/v1/queries/adhoc?q=SELECT%20DISTINCT%20*%20FROM%20/Device_simulation%20s%20ORDER%20BY%20nanoTimestamp%20desc%20limit%20"+maxNumberOfSamples, List.class);
 
 		logger.info(">>> Posting "+objects.size()+" messages ...");
 
