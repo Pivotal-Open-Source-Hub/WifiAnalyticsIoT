@@ -5,11 +5,6 @@ if [ -z "$GEODE_HOME" ]; then
     exit 1
 fi
 
-if [ -z "$JAVA_HOME" ]; then
-    echo "Please set JAVA_HOME"
-    exit 1
-fi
-
 export PATH=$GEODE_HOME/bin:$PATH
 
 echo "Geode version:" `gfsh version`

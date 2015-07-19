@@ -1,1 +1,1 @@
-nohup java -jar IotAnalytics-all.jar >> client.out &
+nohup java -jar DeviceClient/build/libs/DeviceClient-all.jar >> client.out &
