@@ -76,8 +76,12 @@ $ ./gradlew run
 # VM Configuation (Ubuntu based)
 
 ----
+# requirements
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get -y update && sudo apt-get -y install oracle-java8-installer git wget python vagrant npm virtualbox
+
+# docker
+wget -qO- https://get.docker.com/ | sh
 
 # maven - zeppelin needs maven 3.1+
 wget http://apache.mirrors.timporter.net/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz
