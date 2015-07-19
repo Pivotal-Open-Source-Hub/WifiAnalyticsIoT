@@ -1,0 +1,134 @@
+# IoT Lab - Building a WIFI tracker system using open-source
+
+<COPY THE INITIAL DESCRIPTION FROM THE LAB, AS SUBMITTED TO OSCON>
+
+For a simple but yet interesting IoT application we'll implement a fairly common use-case, known as "Device tracking". Using only the WIFI signal as captured from different devices over an indoor location (like the room we are right now!) we'd like to predict the exact location of other devices around (let's say your cell phone!) and keep track of those. Don't worry, we're only capturing the MAC address associated to each device, so there's no concern with personal informations.
+
+The use case implemented is widely applied on different industries, from Telcos (antennas keeping tracking of subscribers), smart advertising (shops can know your shopping pattern based on where you spend your time inside a mall, for example), security (self-explanatory), logistics (where exactly are the items I'm supposed to ship?) or event at trade shows, tracking on which booths people spend most of the time :) 
+You might want to say: "there's GPS for that" but remember:  GPS won't work indoors!
+
+
+## Objectives of this lab:
+
+. Get used to the tools and concepts: 
+.. Apache Geode(incubating)
+.. Spring XD
+.. Docker
+.. Spark SQL and Apache Zeppelin
+.. CloudFoundry Lattice
+.. Raspberry PI
+
+. Apply the tools above to build a true data analytics system 
+. Have fun!!
+
+## Requirements
+
+. A computer running Linux or MacOSX
+. Internet connection 
+. Willingness to learn
+
+
+## Environment
+
+We'll use the 100% open-source http://lattice.cf[CloudFoundry Lattice] as a development sandbox. For enterprise deployments, Pivotal CF offers a multi-cloud enterprise-ready CloudFoundry platform system to be used. Both Spring XD and Pivotal GemFire (enterprise version of Apache Geode) are available as services on Pivotal CF as well.
+
+A few things to keep in mind:
+
+- Other than CloudFoundry Lattice (provided), no tools will be necessary to install. Everything will be provided as Docker images.
+- The instructor will be using real Raspberry PI ("things") devices. For making this lab easy to accomplish even without those devices, a simulator that replays data coming from real devices is provided.
+
+ps: In case you're using real devices instead of a simulator, straightforward setup instructions for the devices are given here:  link:/README-raspberrypi.adoc[README - Raspberry PI] 
+
+
+
+## Setup
+
+### Getting started with Spring XD
+
+Spring XD will be used to create, deploy and manage data streams coming from the various devices (either real or simulated), while applying the needed filtering, enrichment, transformations and storing the information where needed (in our case, Apache Geode).
+
+Let's start getting used to it by creating a very simple stream:
+
+----
+----
+
+
+
+---
+ 
+
+
+
+For instructions on the setup of the devices, please see link:/README-raspberrypi.adoc[README - Raspberry PI]
+
+
+### Setup Geode
+
+----
+$ cd server
+$ gfsh
+
+gfsh>  start locator --name=locator1 --mcast-port=0 --bind-address=<ADDRESS>
+gfsh> start server --name=server1 --mcast-port=0 --bind-address=<ADDRESS>
+gfsh> create region --name=/Probe_requests --type=PARTITION
+gfsh> create region --name=/Distances --type=REPLICATE
+gfsh> create region --name=/DeviceLocations --type=REPLICATE
+gfsh> create region --name=/RaspberryPIs --type=REPLICATE
+----
+
+### Setup Spring XD
+
+- Start Spring XD server
+----
+$ xd-singlenode
+(...)
+----
+
+- Modify the file server/streams.xd to connect to the right XD server as creating the stream.
+- Create the stream:
+
+----
+$ xd-shell --cmdfile streams.xd
+Jul 15, 2015 11:12:56 PM org.springframework.shell.core.AbstractShell handleExecutionResult
+INFO: Successfully targeted http://172.20.14.47:9393
+Jul 15, 2015 11:13:07 PM org.springframework.shell.core.AbstractShell handleExecutionResult
+INFO: Created and deployed new stream 'input'
+----
+
+### Start the GUI
+
+- Modify the file __server/WebConsole/src/main/resources/client.xml__ to connect to the right Gem locator host
+- Startup the client:
+
+----
+$ cd server/WebConsole
+$ ./gradlew run
+----
+
+- Open the browser at __http://<server>:8080/
+
+
+### Start clients 
+
+For each Raspberry PI:
+
+- SSH to the Raspberry PIs
+
+----
+$ ssh pi@<PI_HOST>
+PI $ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
+----
+
+- Modify the file __client/IoT-Analytics-Http/src/main/resources/application.properties__ to connect to the right Spring XD server and to use the correct tshark command syntax.
+
+- Start the client:
+
+----
+$ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
+$ ./gradlew run
+----
+ 
+- Do the above steps for each least 3 Raspberry PIs 
+- Refresh the browser at http://<server>:8080/
+
+

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -16,11 +16,14 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class DeviceSimulator implements CommandLineRunner {
 
-	private String URL = "http://localhost:9000";
+    @Value("${serverUrl}")
+	private String URL;
 	
-	private String geodeURL = "http://localhost:8888";
+    @Value("${geodeUrl}")
+	private String geodeURL;
 	
-	private long delay = 100;
+    @Value("${delayInMs}")
+	private long delay;
 
 	private RestTemplate restTemplate = new RestTemplate();
 	
@@ -29,7 +32,7 @@ public class DeviceSimulator implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-				
+		logger.info(">>>>> RUNNING SIMULATION MODE");		
 		logger.info("--------------------------------------");
 		logger.info(">>> Geode rest endpoint: "+geodeURL);
 		logger.info(">>> Endpoint URL: "+URL);
@@ -58,9 +61,9 @@ public class DeviceSimulator implements CommandLineRunner {
 		
 	}
 	
-	
+	/*
 	public static void main(String[] args){
 		SpringApplication.run(DeviceSimulator.class, args);
-	}
+	}*/
 
 }

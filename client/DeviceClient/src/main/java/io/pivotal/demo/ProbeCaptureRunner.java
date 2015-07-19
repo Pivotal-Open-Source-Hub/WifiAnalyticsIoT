@@ -1,10 +1,13 @@
 package io.pivotal.demo;
 
+import io.pivotal.demo.devicesimulator.DeviceSimulator;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,39 +28,52 @@ public class ProbeCaptureRunner implements CommandLineRunner {
     @Value("${tshark_process}")
     private String tshark_command;
 	
-	public void run(String... args) throws Exception {
+    @Value("${simulation}")
+    private boolean simulation;
+    
+    @Autowired
+    private DeviceSimulator simulator;
+
+    
+    public void run(String... args) throws Exception {
 		
-				
-		logger.info("--------------------------------------");
-				
-		logger.info("Capturing tshark process output...");
-		
-		Process tshark = Runtime.getRuntime().exec(tshark_command);
-		try{
-			if (!tshark.isAlive()){
-				
-				logger.severe("Process exited with code "+tshark.exitValue());	
-				logger.severe(new BufferedReader(new InputStreamReader(tshark.getInputStream())).readLine());
-				
-				BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
-				String errorLine = null;
-				while ((errorLine = errorStream.readLine())!=null){
-					logger.severe(errorLine);
-				}						
-			}
+		if (simulation){
 			
-			BufferedReader br = new BufferedReader(new InputStreamReader(tshark.getInputStream()));
-			while (tshark.isAlive()){
-				String line = br.readLine();
-				processLine(line);			
-			}
-			br.close();
-			tshark.waitFor();
+			simulator.run(args);
 		}
-		finally{
-			if (tshark.isAlive()) tshark.destroyForcibly();
-		}	
 		
+		else{
+	    	
+			logger.info("--------------------------------------");
+					
+			logger.info("Capturing tshark process output...");
+			
+			Process tshark = Runtime.getRuntime().exec(tshark_command);
+			try{
+				if (!tshark.isAlive()){
+					
+					logger.severe("Process exited with code "+tshark.exitValue());	
+					logger.severe(new BufferedReader(new InputStreamReader(tshark.getInputStream())).readLine());
+					
+					BufferedReader errorStream = new BufferedReader(new InputStreamReader(tshark.getErrorStream()));
+					String errorLine = null;
+					while ((errorLine = errorStream.readLine())!=null){
+						logger.severe(errorLine);
+					}						
+				}
+				
+				BufferedReader br = new BufferedReader(new InputStreamReader(tshark.getInputStream()));
+				while (tshark.isAlive()){
+					String line = br.readLine();
+					processLine(line);			
+				}
+				br.close();
+				tshark.waitFor();
+			}
+			finally{
+				if (tshark.isAlive()) tshark.destroyForcibly();
+			}	
+		}
 	}
 	protected void processLine(String line){
 		StringTokenizer st = new StringTokenizer(line);
