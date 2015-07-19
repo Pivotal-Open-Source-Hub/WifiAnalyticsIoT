@@ -25,8 +25,8 @@ public class GeodeClient {
     
     private static GeodeClient instance;
 
-		private static String locatorHost = System.getProperty("locatorHost", "localhost");
-		private static int locatorPort = Integer.getInteger("locatorPort", 10334);
+	//private static String locatorHost = System.getProperty("locatorHost", "localhost");
+	//private static int locatorPort = Integer.getInteger("locatorPort", 10334);
 
     Region distances;
     Region pis;
@@ -35,12 +35,12 @@ public class GeodeClient {
 	  static Logger logger = Logger.getLogger(GeodeClient.class.getCanonicalName());
 
     private GeodeClient() {
-				logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
+		//logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
 
         cache = new ClientCacheFactory()
-								.addPoolLocator(locatorHost, locatorPort)
-								.setPoolSubscriptionEnabled(true)
-								.set("name", "GeodeClient")
+		//						.addPoolLocator(locatorHost, locatorPort)
+		//						.setPoolSubscriptionEnabled(true)
+		//						.set("name", "GeodeClient")
 								.set("cache-xml-file", "client.xml")
 								.set("mcast-port", "0")
 								.create();

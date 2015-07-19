@@ -4,9 +4,10 @@
         "http://www.gemstone.com/dtd/cache8_0.dtd">
 
 <client-cache>
-    <!--<pool name="client" subscription-enabled="true">-->
-        <!--<locator host="localhost" port="10334" />-->
-    <!--</pool>-->
+
+    <pool name="client" subscription-enabled="true">
+        <locator host="localhost" port="10334" />
+    </pool>
 
    <pdx read-serialized="false">
 		<pdx-serializer>
@@ -18,6 +19,7 @@
      		</parameter>
 		</pdx-serializer>
     </pdx>
+
 
     <region name="Probe_requests">
         <region-attributes refid="PROXY">

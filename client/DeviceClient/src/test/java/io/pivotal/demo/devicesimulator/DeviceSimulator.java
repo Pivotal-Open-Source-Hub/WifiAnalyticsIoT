@@ -1,11 +1,13 @@
 package io.pivotal.demo.devicesimulator;
 
+import io.pivotal.demo.ProbeRequest;
+
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -14,14 +16,11 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class DeviceSimulator implements CommandLineRunner {
 
-	@Value("${serverUrl}") 
-	private String URL;
+	private String URL = "http://localhost:9000";
 	
-	@Value("${geodeUrl}") 
-	private String geodeURL;
+	private String geodeURL = "http://localhost:8888";
 	
-	@Value("${delayInMs}") 
-	private long delay;
+	private long delay = 100;
 
 	private RestTemplate restTemplate = new RestTemplate();
 	
@@ -36,18 +35,19 @@ public class DeviceSimulator implements CommandLineRunner {
 		logger.info(">>> Endpoint URL: "+URL);
 		logger.info("--------------------------------------");
 		
-		List objects = restTemplate.getForObject(geodeURL+"/gemfire-api/v1/queries/adhoc?q=SELECT%20DISTINCT%20*%20FROM%20/Probe_requests%20s%20ORDER%20BY%22nanoTimestamp%22%", List.class);
+		List objects = restTemplate.getForObject(geodeURL+"/gemfire-api/v1/queries/adhoc?q=SELECT%20DISTINCT%20*%20FROM%20/Device_simulation%20s%20ORDER%20BY%20nanoTimestamp", List.class);
 
 		logger.info(">>> Posting "+objects.size()+" messages ...");
 
 		for (int i=0; i<objects.size(); i++){
 			Map<String,Object> map = (Map)objects.get(i);
-			ProbeRequest price = new ProbeRequest();
-			price.setDeviceId((String)map.get("deviceId"));
-			price.setPiId(new Double(map.get("piId").toString()));
-			price.setSignalDbm(new Double(map.get("signal_dbm").toString()));
-			price.setTimestamp((Long)map.get("nanoTimestamp"));
-			ProbeRequest response = restTemplate.postForObject(URL, price, ProbeRequest.class);
+			ProbeRequest request = new ProbeRequest();
+			request.setDevice_id((String)map.get("deviceId"));
+			request.setPiId((String)(map.get("piId").toString()));
+			request.setSignal_dbm((int)(map.get("signalDbm")));
+			request.setNanoTimestamp((long)map.get("nanoTimestamp"));
+			request.setFrequencyMhz((int)map.get("frequencyMhz"));			
+			ProbeRequest response = restTemplate.postForObject(URL, request, ProbeRequest.class);
 			Thread.sleep(delay);
 		}
 		
@@ -56,6 +56,11 @@ public class DeviceSimulator implements CommandLineRunner {
 		logger.info("done");
 		
 		
+	}
+	
+	
+	public static void main(String[] args){
+		SpringApplication.run(DeviceSimulator.class, args);
 	}
 
 }

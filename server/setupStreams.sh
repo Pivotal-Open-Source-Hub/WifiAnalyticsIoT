@@ -1,1 +1,1 @@
-xd-shell --cmdfile streams.xd
+xd-shell --cmdfile streams/streams.xd

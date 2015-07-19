@@ -8,7 +8,7 @@ fi
 export PATH=$GEODE_HOME/bin:$PATH
 
 echo "Geode version:" `gfsh version`
-gfsh run --file=setup.gfsh
+gfsh run --file=data/setup.gfsh
 
 
 

@@ -1,0 +1,1 @@
+stream create --name input --definition "http --port=9000 | splitter --expression=#jsonPath(payload,'$') | transform --script='file:streams/calculateDistances.groovy' |object-to-json| gemfire-json-server --host=localhost --port=10334 --useLocator=true --regionName=Probe_requests --keyExpression=payload.getField('nanoTimestamp')" --deploy

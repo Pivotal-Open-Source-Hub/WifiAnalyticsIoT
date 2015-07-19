@@ -1,3 +1,0 @@
-admin config server http://172.20.14.47:9393
-
-stream create --name input --definition "http --port=9000 | splitter --expression=#jsonPath(payload,'$') | transform --script='file:calculateDistances.groovy' |object-to-json| gemfire-json-server --host=172.20.14.47 --port=10334 --useLocator=true --regionName=Probe_requests --keyExpression=payload.getField('nanoTimestamp')" --deploy

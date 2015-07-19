@@ -13,45 +13,56 @@ public class ProbeRequest {
 	@JsonProperty("distance")
 	private double distance;
 
-	@JsonProperty("signal_dbm")	
+	@JsonProperty("signalDbm")	
 	private double signalDbm;
 
 	@JsonProperty("piId")	
-	private double piId;
+	private String piId;
 
 	@JsonProperty("nanoTimestamp")	
 	private long timestamp;
+	
+	@JsonProperty("frequencyMhz")
+	private int frequencyMhz;
+
+	public int getFrequencyMhz() {
+		return frequencyMhz;
+	}
+
+	public void setFrequencyMhz(int frequencyMhz) {
+		this.frequencyMhz = frequencyMhz;
+	}
 
 	public String getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(String symbol) {
-		this.deviceId = symbol;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double price) {
-		this.distance = price;
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 	public double getSignalDbm() {
 		return signalDbm;
 	}
 
-	public void setSignalDbm(double high) {
-		this.signalDbm = high;
+	public void setSignalDbm(double signal) {
+		this.signalDbm = signal;
 	}
 
-	public double getPiId() {
+	public String getPiId() {
 		return piId;
 	}
 
-	public void setPiId(double low) {
-		this.piId = low;
+	public void setPiId(String id) {
+		this.piId = id;
 	}
 
 	public long getTimestamp() {

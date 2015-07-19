@@ -36,7 +36,9 @@ public class AvgDistanceProbeReqListener extends CacheListenerAdapter implements
 		if (obj instanceof PdxInstance){			
 			piId = (String)((PdxInstance)obj).getField("piId");
 			deviceId = (String)((PdxInstance)obj).getField("deviceId");
-			distance = (double)((PdxInstance)obj).getField("distance");
+			if (((PdxInstance)obj).hasField("distance")){
+				distance = (double)((PdxInstance)obj).getField("distance");
+			}
 		}
 		else throw new RuntimeException("new object is not PDX Instance.. it came as "+obj.getClass());
 		
@@ -47,7 +49,8 @@ public class AvgDistanceProbeReqListener extends CacheListenerAdapter implements
 			sumOfDistances += distances[i];
 		}
 		
-		GeodeClient.getInstance().setDeviceDistance(new DeviceDistance(deviceId, piId, sumOfDistances / distances.length));
+		
+		GeodeClient.getInstance().setDeviceDistance(new DeviceDistance(deviceId, piId, (distances==null || distances.length==0)?sumOfDistances:sumOfDistances / distances.length));
 	}
 
 	@Override
