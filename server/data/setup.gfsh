@@ -11,9 +11,11 @@ start server --name=server1 --locators=localhost[10334] --J=-Dgemfire.start-dev-
 create region --name=/Probe_requests --type=PARTITION
 create region --name=/Distances --type=PARTITION
 create region --name=/DeviceLocations --type=REPLICATE
+create region --name=/Device_simulation --type=PARTITION
 create region --name=/RaspberryPIs --type=REPLICATE
 
 describe region --name=/Probe_requests
 describe region --name=/Distances
 describe region --name=/DeviceLocations
 describe region --name=/RaspberryPIs
+describe region --name=/Device_simulation
