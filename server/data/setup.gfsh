@@ -14,6 +14,8 @@ create region --name=/DeviceLocations --type=REPLICATE
 create region --name=/Device_simulation --type=PARTITION
 create region --name=/RaspberryPIs --type=REPLICATE
 
+import data --file=../data/DeviceSimulation.gfd --region=/Device_simulation --member=server1
+
 describe region --name=/Probe_requests
 describe region --name=/Distances
 describe region --name=/DeviceLocations
