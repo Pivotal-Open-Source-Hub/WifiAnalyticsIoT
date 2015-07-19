@@ -65,9 +65,5 @@ public class DeviceSimulator implements CommandLineRunner {
 		
 	}
 	
-	/*
-	public static void main(String[] args){
-		SpringApplication.run(DeviceSimulator.class, args);
-	}*/
 
 }

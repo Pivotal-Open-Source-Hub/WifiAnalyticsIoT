@@ -5,9 +5,6 @@
 
 <client-cache>
 
-    <pool name="client" subscription-enabled="true">
-        <locator host="localhost" port="10334" />
-    </pool>
 
    <pdx read-serialized="false">
 		<pdx-serializer>
