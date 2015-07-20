@@ -1,9 +1,8 @@
 
 ## Reference Tables
 
-# Default PORTs
+# Default PORT
 
-.Table PORTs
 [cols="2,5a", options="header"]
 |===
 | Application |Port Number
@@ -15,7 +14,6 @@
              HTTP Stream: 9000
 |===
 
-.Table Default PATHS
 [cols="2,5a", options="header"]
 |===
 | Application | PATH
