@@ -4,7 +4,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
+
+import org.springframework.cloud.Cloud;
+import org.springframework.cloud.CloudFactory;
 
 import com.gemstone.gemfire.cache.Region;
 import com.gemstone.gemfire.cache.client.ClientCache;
@@ -37,6 +41,18 @@ public class GeodeClient {
     private GeodeClient() {
 		logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
 
+		Cloud cloud = new CloudFactory().getCloud();
+		
+		if (cloud!=null){
+			Properties props = cloud.getCloudProperties();
+			String locators = props.getProperty("p-gemfire.credentials.locators");
+			String user = props.getProperty("p-gemfire.credentials.username");
+			String pass = props.getProperty("p-gemfire.credentials.password");
+			
+			System.out.println("locators="+locators+", User="+user+", Pass="+pass);			
+			
+		}
+		
         cache = new ClientCacheFactory()
 								.addPoolLocator(locatorHost, locatorPort)
 								.setPoolSubscriptionEnabled(true)
