@@ -17,12 +17,12 @@ cd ~/apache-maven-3.3.3/bin
 
 *On Mac*:
 
-- Unzip Kitematic-0.7.4-Mac.zip and execute the installer.
+  * Unzip `Kitematic-0.7.4-Mac.zip` and execute the installer.
 
 *On Linux*:
 
-  * Ubuntu: apt-get -y install docker.io
-  * CentOS: yum -y install docker docker-registry
+  * Ubuntu: `apt-get -y install docker.io`
+  * CentOS: `yum -y install docker docker-registry`
 
 *On Windows*: Sorry. ;)
 
