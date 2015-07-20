@@ -1,7 +1,7 @@
 
 ## Reference Tables
 
-# Default PORT
+### Default PORT
 
 [cols="2,5a", options="header"]
 |===
@@ -14,6 +14,7 @@
              HTTP Stream: 9000
 |===
 
+### Default PATHs
 [cols="2,5a", options="header"]
 |===
 | Application | PATH
@@ -26,7 +27,7 @@
 
 
 # Java
-JDK 7 or 8 required.
+JDK 7 or 8 required. Installers available in the installers folder.
 
 ## Gradle
 ----
