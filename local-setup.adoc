@@ -1,0 +1,61 @@
+# Java
+JDK 7 or 8 required.
+
+## Gradle
+----
+unzip gradle-2.4-bin.zip
+cd ~/gradle-2.4/bin
+----
+
+## Maven
+----
+unzip apache-maven-3.3.3-bin.tar.gz
+cd ~/apache-maven-3.3.3/bin
+----
+
+# Docker
+
+*On Mac*:
+
+- Unzip Kitematic-0.7.4-Mac.zip and execute the installer.
+
+*On Linux*:
+
+  * Ubuntu: apt-get -y install docker.io
+  * CentOS: yum -y install docker docker-registry
+
+*On Windows*: Sorry. ;)
+
+Details about and more instructions about Docker: https://docs.docker.com/installation/
+
+# Apache Geode (incubating):
+
+----
+tar -xzvpf apache-geode-1.0.0-incubating-SNAPSHOT.tar.gz
+cd ~/apache-geode-1.0.0-incubating-SNAPSHOT/bin
+**gfsh**
+----
+
+# Apache Zeppelin (incubating):
+----
+tar -xzvpf apache-geode-1.0.0-incubating-SNAPSHOT.tar.gz
+cd ~/zeppelin-0.6.0-incubating-SNAPSHOT/bin
+./zeppelin-daemon.sh start
+----
+
+# SpringXD:
+----
+unzip spring-xd-1.2.0.RELEASE-dist.zip
+cd ~/spring-xd-1.2.0.RELEASE/bin
+xd/bin/xd-singlenode
+----
+
+For xd-shell  `shell/bin/xd-shell`
+
+# Extra and optional: Lattice
+----
+git clone https://github.com/cloudfoundry-incubator/lattice.git
+cd lattice
+git checkout v0.2.6
+vagrant up --provider virtualbox
+----
