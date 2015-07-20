@@ -1,3 +1,32 @@
+
+## Reference Tables
+
+# Default PORTs
+
+.Table PORTs
+[cols="2,5a", options="header"]
+|===
+| Application |Port Number
+| Apache Zeppelin| 8080
+| Apache Geode| LOCATOR: 10334 & 1099 (JMX) +
+                SERVER: 40404 +
+                REST: 8888
+| Spring XD| Admin: 9393 +
+             HTTP Stream: 9000
+|===
+
+.Table Default PATHS
+[cols="2,5a", options="header"]
+|===
+| Application | PATH
+| Apache Zeppelin| zeppelin-0.6.0-incubating-SNAPSHOT
+| Apache Geode| apache-geode-1.0.0-incubating-SNAPSHOT
+| Spring XD| spring-xd-1.2.0.RELEASE
+| Apache Maven | apache-maven-3.3.3
+| Gradle | gradle-2.4
+|===
+
+
 # Java
 JDK 7 or 8 required.
 
