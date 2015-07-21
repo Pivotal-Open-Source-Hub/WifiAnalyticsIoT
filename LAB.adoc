@@ -1,0 +1,133 @@
+= IoT Lab - Building a WIFI tracking system using Open Source
+
+The Internet of Things requires new applications to consume data that streams in from connected devices, and apply advanced real-time analytics. It also demands the ability to scale horizontally in order to support a large number of devices, while keeping extreme low latency for immediate data insights.
+
+How can you leverage open source software like Apache Geode, Spring XD, Docker, and Cloud Foundry/Lattice to quickly build a complete IoT solution?
+
+In less than half a day, this hands-on workshop will show you how to:
+
+* Ingest data from sensors, small devices, and micro-processors like Raspberry Pi
+* Easily create data-streaming pipelines without source code, using a descriptive language
+* Transact and process information reliably in-memory, using distributed and scalable technologies
+* React to data changes, triggering events, and processors
+* Generate real-time analytics based on data coming from different sources and devices
+* Deploy and scale applications and services using lightweight containers.
+* Get hands-on training with several open source projects:
+
+* Apache Geode: An open source, distributed, in-memory database for scale-out applications
+* Spring XD: A data pipeline system that provides ingest and orchestration of data flows between sources and processing steps at scale
+* Docker: An application container engine
+* Cloud Foundry: A fully integrated cloud-native platform solution.
+
+For a simple but yet interesting IoT application we'll implement a fairly common use-case, known as "Device tracking". Using only the WIFI signal as captured from different devices over an indoor location (like the room we are right now!) we'd like to predict the exact location of other devices around (let's say your cell phone!) and keep track of those. Don't worry, we're only capturing the MAC address associated to each device, so there's no concern with personal informations.
+
+The use case implemented is widely applied on different industries, from Telcos (antennas keeping tracking of subscribers), smart advertising (shops can know your shopping pattern based on where you spend your time inside a mall, for example), security (self-explanatory), logistics (where exactly are the items I'm supposed to ship?) or event at trade shows, tracking on which booths people spend most of the time :)
+You might want to say: "there's GPS for that" but remember:  GPS won't work indoors!
+
+== Objectives of this lab:
+
+. Get used to the tools and concepts:
+.. Apache Geode(incubating)
+.. Spring XD
+.. Docker
+.. Spark SQL and Apache Zeppelin
+.. CloudFoundry Lattice
+.. Raspberry PI
+
+. Apply the tools above to build a true data analytics system
+. Have fun!!
+
+== Requirements
+
+. A computer running Linux or MacOSX
+. Internet connection
+. Willingness to learn
+
+1. VirtualBox
+1. Vagrant
+
+Installers available in the folder `installers`
+
+= Projects
+
+== Starting the VM
+
+* `vagrant up`
+* `vagrant ssh`
+
+== Apache Geode
+
+1. Start up
+----
+$ cd $APP_HOME/server
+$ pwd
+/home/vagrant/WifiAnalyticsIoT/server
+$ startGeode.sh
+----
+1. Server & Locator
+1. Regions
+1. GFSH (cli)
+----
+gfsh>
+----
+1. Play with the terminal
+1. <optional> Running on docker
+----
+docker run -it -p 10334:10334 -p 7575:7575 -p 1099:1099  markito/geode-docker-spark gfsh
+----
+1. Access the Geode REST API  at `http://192.168.56.10/gemfire-api/docs/index.html` (SWAGGER)
+
+== SpringXD
+
+1. Start the server
+----
+nohup xd-singlenode &
+----
+1. Monitor `nohup.out` log file and make sure it's started.
+1. `xd-shell` (cli)
+1.  Exit the shell
+1. Create streams
+----
+$ cd $APP_HOME/server/
+$ ./setupStreams.sh
+----
+
+== WebConsole
+
+1. Go the WebConsole app
+----
+$ cd $APP_HOME/server/WebConsole
+----
+1. Start the application using gradle
+----
+$ gradle run
+----
+1. Open your browser at *192.168.56.10:8080*
+1. Play with the app
+1. Look at the source code. Specifically listeners
+
+== Simulator
+
+1. Go to the DeviceClient app
+----
+cd $APP_HOME/client/DeviceClient/
+----
+1. Start the application using gradle
+----
+$ gradle run
+----
+1. Describe region `/Probe_requests` in Apache Geode using *GFSH* - If region size is increasing, simulator is working fine.
+1. Check the WebConsole application *192.168.56.10:8080*
+
+== Zeppelin
+
+Extras. Please check Readme.md under zeppelin folder.
+
+== Links
+
+* http://geode.incubator.apache.org
+* http://zeppelin.incubator.apache.org
+* http://projects.spring.io/spring-xd/
+* http://lattice.cf/docs/getting-started/
+* https://github.com/Pivotal-Open-Source-Hub/WifiAnalyticsIoT
+* https://www.raspberrypi.org/
