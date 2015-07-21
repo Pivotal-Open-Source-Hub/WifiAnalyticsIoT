@@ -79,6 +79,10 @@ docker run -it -p 10334:10334 -p 7575:7575 -p 1099:1099  markito/geode-docker-sp
 
 == SpringXD
 
+1. Export XD_HOME
+
+export XD_HOME=/home/vagrant/projects/spring-xd-1.2.0.RELEASE/xd
+
 1. Start the server
 ----
 nohup xd-singlenode &
@@ -119,9 +123,13 @@ $ gradle run
 1. Describe region `/Probe_requests` in Apache Geode using *GFSH* - If region size is increasing, simulator is working fine.
 1. Check the WebConsole application *192.168.56.10:8080*
 
-== Zeppelin
+== Extra 1: Zeppelin
 
-Extras. Please check Readme.md under zeppelin folder.
+Extras. Please check README.md under server/zeppelin folder.
+
+== Extra 2: Setup Wifi Monitoring in your RaspberryPI
+
+Extras. Please check README-raspberrypi.adoc
 
 == Links
 
