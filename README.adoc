@@ -49,7 +49,7 @@ $ ./gradlew run
 - Open the browser at __http://<server>:8080/
 
 
-### Start clients 
+### Start clients
 
 For each Raspberry PI:
 
@@ -68,8 +68,8 @@ PI $ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
 $ cd WifiAnalyticsIoT/client/IoT-Analytics-Http
 $ ./gradlew run
 ----
- 
-- Do the above steps for each least 3 Raspberry PIs 
+
+- Do the above steps for each least 3 Raspberry PIs
 - Refresh the browser at http://<server>:8080/
 
 
@@ -78,17 +78,18 @@ $ ./gradlew run
 ----
 # requirements
 sudo add-apt-repository ppa:webupd8team/java
-sudo apt-get -y update && sudo apt-get -y install oracle-java8-installer git wget python vagrant npm virtualbox
+sudo apt-get -y update && sudo apt-get -y install oracle-java8-installer git wget python vagrant unzip npm virtualbox
 
 # docker
 wget -qO- https://get.docker.com/ | sh
 
 # maven - zeppelin needs maven 3.1+
-wget http://apache.mirrors.timporter.net/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz
+wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
 sudo mkdir -p /usr/local/apache-maven
-sudo mv apache-maven-3.1.1-bin.tar.gz /usr/local/apache-maven
+sudo mv apache-maven-3.3.3-bin.tar.gz /usr/local/apache-maven
 cd /usr/local/apache-maven
-sudo tar -xzvf apache-maven-3.1.1-bin.tar.gz
+sudo tar -xzvf apache-maven-3.3.3-bin.tar.gz
+export PATH=/usr/local/apache-maven/apache-maven-3.3.3/bin:$PATH
 
 # geode
 git clone https://github.com/apache/incubator-geode
