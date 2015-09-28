@@ -7,7 +7,6 @@ import io.pivotal.demo.trilateration.Scale;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

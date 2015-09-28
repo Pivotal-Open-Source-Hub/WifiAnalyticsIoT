@@ -11,9 +11,6 @@ buildscript {
 
 apply plugin: 'spring-boot'
 apply plugin: 'java'
-apply plugin: 'cloudfoundry'
-
-tasks."cf-push".dependsOn assemble
 
 
 
@@ -30,22 +27,6 @@ jar {
     baseName = 'WebConsole'
 }
 
-
-cloudfoundry {
-    target = "https://api.demo.fe.gopivotal.com"
-    organization = "demo-org"
-    space = "development"
-	username="fmelo"
-	password="pivotal"
-    application = "iotdemo-webconsole"
-    file = file("${jar.archivePath}")
-    host = "webconsole"
-    domain = "demo.fe.gopivotal.com"
-    memory = 512
-    instances = 1
-    healthCheckTimeout = 180
-    trustSelfSignedCerts = true
-}
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -64,9 +45,13 @@ bootRun {
 
 dependencies {
 	compile ("org.apache.geode:gemfire-core:1.0.0-incubating-SNAPSHOT")
+	/*
+	compile("com.gemstone.gemfire:gemfire:8.1.0")
 			{
 		exclude module: "org.apache.logging.log4j:log4j-slf4j-impl"
-	}
+	}*/
+	compile 'org.mortbay.jetty:jetty-util:6.1.25';
+	
 		
 	compile "com.fasterxml.jackson.core:jackson-databind"
 
@@ -80,10 +65,6 @@ dependencies {
 	testCompile ("org.springframework.boot:spring-boot-starter-test") {
 		exclude module : 'spring-boot-starter-logging'
 	}
-
-    compile 'org.springframework.cloud:spring-cloud-spring-service-connector:1.1.1.RELEASE'
-    compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.1.1.RELEASE'
-
 
 
 }

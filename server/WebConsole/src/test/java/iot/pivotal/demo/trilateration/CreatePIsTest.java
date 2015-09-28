@@ -3,11 +3,6 @@ package iot.pivotal.demo.trilateration;
 import io.pivotal.demo.ui.DeviceLocation;
 import io.pivotal.demo.ui.GeodeClient;
 
-import java.net.UnknownHostException;
-
-import org.junit.Test;
-import org.springframework.web.client.RestTemplate;
-
 public class CreatePIsTest {
 
 

@@ -1,6 +1,5 @@
 package io.pivotal.demo.ui;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DeviceLocation{
 

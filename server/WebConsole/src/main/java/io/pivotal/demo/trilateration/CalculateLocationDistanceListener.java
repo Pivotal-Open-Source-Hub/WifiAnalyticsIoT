@@ -4,7 +4,6 @@ import io.pivotal.demo.ui.DeviceDistance;
 import io.pivotal.demo.ui.DeviceLocation;
 import io.pivotal.demo.ui.GeodeClient;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;

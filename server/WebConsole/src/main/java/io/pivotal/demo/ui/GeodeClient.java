@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.springframework.cloud.Cloud;
-import org.springframework.cloud.CloudFactory;
+import org.mortbay.util.ajax.JSON;
 
 import com.gemstone.gemfire.cache.Region;
 import com.gemstone.gemfire.cache.client.ClientCache;
@@ -31,29 +30,31 @@ public class GeodeClient {
 
 	private static String locatorHost = System.getProperty("locatorHost", "localhost");
 	private static int locatorPort = Integer.getInteger("locatorPort", 10334);
+	private static String username = "";
+	private static String password = "";
 
     Region distances;
     Region pis;
     Region locations;
 
-	  static Logger logger = Logger.getLogger(GeodeClient.class.getCanonicalName());
+	static Logger logger = Logger.getLogger(GeodeClient.class.getCanonicalName());
 
     private GeodeClient() {
-		logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
-
-		Cloud cloud = new CloudFactory().getCloud();
+ 
+    	getCloudEnvProperties();
+    	
 		
-		if (cloud!=null){
-			Properties props = cloud.getCloudProperties();
-			String locators = props.getProperty("p-gemfire.credentials.locators");
-			String user = props.getProperty("p-gemfire.credentials.username");
-			String pass = props.getProperty("p-gemfire.credentials.password");
-			
-			System.out.println("locators="+locators+", User="+user+", Pass="+pass);			
-			
+		Properties props = new Properties();
+		if (!username.isEmpty()){
+			/*
+			props.put("security-client-auth-init","templates.security.UserPasswordAuthInit.create");*/
+			props.put("security-username", username);
+			props.put("security-password", password);
 		}
 		
-        cache = new ClientCacheFactory()
+		logger.info(String.format("Geode Locator Information: %s[ %d ]",locatorHost, locatorPort));
+
+        cache = new ClientCacheFactory(props)
 								.addPoolLocator(locatorHost, locatorPort)
 								.setPoolSubscriptionEnabled(true)
 								.set("name", "GeodeClient")
@@ -67,6 +68,26 @@ public class GeodeClient {
         pis = cache.getRegion(PIsRegionName);
         locations = cache.getRegion(locationsRegionName);
         cache.getRegion("Probe_requests").registerInterest("ALL_KEYS");
+    }
+    
+    /*
+     * Parse the environment variables for services.
+     */
+    private void getCloudEnvProperties(){
+    	String vcapServices = System.getenv("VCAP_SERVICES");
+    	if (vcapServices==null || vcapServices.isEmpty()) return;
+    	    	
+		Object parsed = JSON.parse(vcapServices);
+		Object[] gemServices = (Object[]) ((Map)parsed).get("p-gemfire");
+		Map credentials=(Map)((Map)gemServices[0]).get("credentials");
+		String locator = ((Object[])credentials.get("locators"))[0].toString();
+		String user = credentials.get("username").toString();
+		String pass = credentials.get("password").toString();
+    	
+		locatorHost = locator.substring(0, locator.indexOf("["));
+		locatorPort = Integer.parseInt(locator.substring(locator.indexOf("[")+1, locator.indexOf("]")));
+		this.username = user;
+		this.password = pass;
     }
     
     
@@ -170,10 +191,31 @@ public class GeodeClient {
 		}
 
 		
-		
-		
 	}
 
+	/*
+	public static void main(String[] args){
+		
+		String prop = "{\"p-gemfire\":[{\"name\":\"gem-service\",\"label\":\"p-gemfire\",\"tags\":[\"gemfire\"],\"plan\":\"Default plan\",\"credentials\":{\"locators\":[\"10.68.43.55[55221]\",\"10.68.43.56[55221]\"],\"username\":\"ba223ab9-d4eb-46d6-544f-13868e761217\",\"password\":\"15068494869170888311\",\"rest_url\":\"\"}}]}";
+		Object parsed = JSON.parse(prop);
+		System.out.println(parsed);
+		
+		Object[] gemServices = (Object[]) ((Map)parsed).get("p-gemfire");
+		Map credentials=(Map)((Map)gemServices[0]).get("credentials");
+		String locator = ((Object[])credentials.get("locators"))[0].toString();
+		String username = credentials.get("username").toString();
+		String password = credentials.get("password").toString();
+		System.out.println("Locators:" + locator);
+		
+		locatorHost = locator.substring(0, locator.indexOf("["));
+		locatorPort = Integer.parseInt(locator.substring(locator.indexOf("[")+1, locator.indexOf("]")));
+		
+		System.out.println(locatorHost);
+		System.out.println(locatorPort);
+		
+	}
+	*/
+	
 
 
 }

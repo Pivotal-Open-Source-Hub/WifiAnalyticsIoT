@@ -6,8 +6,6 @@ import io.pivotal.demo.ui.GeodeClient;
 
 import java.util.Iterator;
 
-import org.junit.Test;
-
 public class ParticleFIlterTest {
 
 
