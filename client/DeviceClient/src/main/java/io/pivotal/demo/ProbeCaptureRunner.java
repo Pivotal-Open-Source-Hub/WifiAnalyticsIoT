@@ -77,6 +77,8 @@ public class ProbeCaptureRunner implements CommandLineRunner {
 	}
 	protected void processLine(String line){
 		StringTokenizer st = new StringTokenizer(line);
+		
+		if (st.countTokens()<3) return;
 		String deviceId = st.nextToken();
 		int signal_dbm = Integer.parseInt(st.nextToken());
 		int frequency = Integer.parseInt(st.nextToken());
